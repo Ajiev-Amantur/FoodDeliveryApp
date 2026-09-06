@@ -34,7 +34,6 @@ import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
 import com.example.fooddeliveryapp.ui.theme.MainPink
 
-
 @Composable
 fun OnboardingScreen() {
     Box(
@@ -44,7 +43,7 @@ fun OnboardingScreen() {
     ) {
         // Background Image (Top part)
         Image(
-            painter = painterResource(id = R.drawable.rectangle_84),
+            painter = painterResource(id = R.drawable.food_bg),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
@@ -58,7 +57,7 @@ fun OnboardingScreen() {
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .fillMaxHeight(0.55f)
-                .clip(RoundedCornerShape(topStart = 80.dp))
+                .clip(RoundedCornerShape(topStart = 120.dp))
                 .background(DarkBackground)
                 .padding(horizontal = 40.dp, vertical = 40.dp),
             horizontalAlignment = Alignment.CenterHorizontally
