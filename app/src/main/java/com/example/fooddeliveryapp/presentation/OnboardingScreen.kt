@@ -35,7 +35,7 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 import com.example.fooddeliveryapp.ui.theme.MainPink
 
 @Composable
-fun OnboardingScreen() {
+fun OnboardingScreen(onLoginClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -91,7 +91,9 @@ fun OnboardingScreen() {
             )
 
             Button(
-                onClick = { /* Handle Login */ },
+                onClick = {
+                    onLoginClick()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)
@@ -112,7 +114,9 @@ fun OnboardingScreen() {
 
             // Signup Button Outlined
             OutlinedButton(
-                onClick = { /* Handle Signup */ },
+                onClick = {
+                    onLoginClick()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)

@@ -62,8 +62,8 @@ fun FoodCard(
             Text(
                 text = description,
                 color = Color.Gray,
-                fontSize = 12.sp,
-                maxLines = 2,
+                fontSize = 10.sp,
+                maxLines = 1,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(10.dp))

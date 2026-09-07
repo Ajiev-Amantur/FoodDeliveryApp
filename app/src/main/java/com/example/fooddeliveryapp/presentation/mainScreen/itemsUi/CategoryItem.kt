@@ -27,9 +27,9 @@ fun CategoryItem(
     isSelected: Boolean = false
 ) {
     val backgroundColor =
-        if (isSelected) Brush.horizontalGradient(listOf(Color(0xFFFA00FF), Color(0xFFD100D1)))
+        if (isSelected) Brush.horizontalGradient(listOf(Color(0xFFFA00FF), Color(0xFFFF0000)))
         else SolidColor(Color(0xFF1A1A1A))
-    val borderColor = if (isSelected) Color.Transparent else Color.Red.copy(alpha = 0.5f)
+    val borderColor = Color.Red.copy(alpha = 0.5f)
     Row(
         modifier = Modifier
             .padding(end = 12.dp) // Отступ между айтемками в списке
