@@ -43,7 +43,7 @@ fun OnboardingScreen(onLoginClick: () -> Unit) {
     ) {
         // Background Image (Top part)
         Image(
-            painter = painterResource(id = R.drawable.food_bg),
+            painter = painterResource(id = R.drawable.ic_food_screen),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()

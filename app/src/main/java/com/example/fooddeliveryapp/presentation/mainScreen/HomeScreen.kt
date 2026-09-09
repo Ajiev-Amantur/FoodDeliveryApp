@@ -32,13 +32,13 @@ import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.FoodViewModel
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
-import com.example.fooddeliveryapp.ui.theme.MainPink
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenUI(foodViewModel: FoodViewModel) {
     val foodList by foodViewModel.food.collectAsState()
-
+    val categoryList by foodViewModel.categories.collectAsState()
+    val selectedCategory by foodViewModel.selectedCategory.collectAsState()
     Scaffold(
         bottomBar = {
             CustomBottomNavigation()
@@ -155,9 +155,15 @@ fun HomeScreenUI(foodViewModel: FoodViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(horizontal = 20.dp, vertical = 15.dp)
                 ) {
-                    item { CategoryItem(null, "All", isSelected = true) }
-                    item { CategoryItem(R.drawable.hamburger, "Burger") }
-                    item { CategoryItem(R.drawable.pizza, "Pizza") }
+                    items(categoryList) { category ->
+                        CategoryItem(
+                            image = category.icon,
+                            title = category.name,
+                            isSelected = (category.name == selectedCategory),                             onClick = {
+                                foodViewModel.filterFood(category.name)
+                            }
+                        )
+                    }
                 }
 
                 Row(
@@ -169,17 +175,37 @@ fun HomeScreenUI(foodViewModel: FoodViewModel) {
                     Text("See all..", color = Color.Gray, fontSize = 14.sp)
                 }
 
+                // Первый ряд популярных товаров
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 15.dp, vertical = 10.dp)
+                    contentPadding = PaddingValues(horizontal = 15.dp, vertical = 10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(foodList) { foodItem ->
+                    items(foodList.take(8)) { foodItem ->
                         FoodCard(
                             name = foodItem.name,
                             price = foodItem.price,
                             imageRes = foodItem.image,
                             description = foodItem.description
                         )
+                    }
+                }
+
+                // Второй ряд (просто для красоты, возьмем оставшиеся продукты)
+                if (foodList.size > 8) {
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = PaddingValues(horizontal = 15.dp, vertical = 10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        items(foodList.drop(8)) { foodItem ->
+                            FoodCard(
+                                name = foodItem.name,
+                                price = foodItem.price,
+                                imageRes = foodItem.image,
+                                description = foodItem.description
+                            )
+                        }
                     }
                 }
                 
