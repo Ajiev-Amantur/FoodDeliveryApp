@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.fooddeliveryapp.data.CategoryDataModel
 import com.example.fooddeliveryapp.data.FoodDataModel
 import com.example.fooddeliveryapp.domain.repository.GetFoodDataRepository
+import com.example.fooddeliveryapp.domain.usecase.FilterFoodByCategory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class FoodViewModel(
-    private val foodRepository: GetFoodDataRepository
+class HomeViewModel(
+    private val foodRepository: GetFoodDataRepository,
+    private val filtredFoodByCategory: FilterFoodByCategory
 ): ViewModel() {
 
     private val _food = MutableStateFlow<List<FoodDataModel>>(emptyList())
@@ -20,7 +22,6 @@ class FoodViewModel(
     private val _categories = MutableStateFlow<List<CategoryDataModel>>(emptyList())
     val categories: StateFlow<List<CategoryDataModel>> = _categories
 
-    // Добавляем состояние выбранной категории
     private val _selectedCategory = MutableStateFlow("All")
     val selectedCategory: StateFlow<String> = _selectedCategory
 
@@ -33,10 +34,10 @@ class FoodViewModel(
         viewModelScope.launch {
            try {
                val foods = foodRepository.getFoodData()
-               _food.value = foods
                allFoodOriginal = foods
+               _food.value = filtredFoodByCategory(allFoodOriginal, _selectedCategory.value)
            } catch (e: Exception) {
-               // Handle error
+               println(e)
            }
         }
     }
@@ -53,14 +54,14 @@ class FoodViewModel(
     }
 
     fun filterFood(categoryName: String){
-        _selectedCategory.value = categoryName // Обновляем выбранную категорию
-        if (categoryName == "All"){
-            _food.value = allFoodOriginal
-        }else{
-            _food.value = allFoodOriginal.filter { foodItem ->
-                foodItem.name.contains(categoryName.removeSuffix("s"),
-                    ignoreCase = true)
-            }
+        _selectedCategory.value = categoryName
+        _food.value = filtredFoodByCategory(allFoodOriginal, categoryName)
+    }
+
+    fun toggleFavorite(foodItem: FoodDataModel) {
+        viewModelScope.launch {
+            foodRepository.toggleFavorite(foodItem.name)
+            getFoodData() // Refresh list to update UI
         }
     }
 }

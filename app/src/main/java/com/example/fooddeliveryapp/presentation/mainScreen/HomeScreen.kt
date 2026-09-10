@@ -29,19 +29,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.FoodViewModel
+import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.HomeViewModel
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenUI(foodViewModel: FoodViewModel) {
-    val foodList by foodViewModel.food.collectAsState()
-    val categoryList by foodViewModel.categories.collectAsState()
-    val selectedCategory by foodViewModel.selectedCategory.collectAsState()
+fun HomeScreenUI(
+    homeViewModel: HomeViewModel,
+    onFavoriteNavClick: () -> Unit
+) {
+    val foodList by homeViewModel.food.collectAsState()
+    val categoryList by homeViewModel.categories.collectAsState()
+    val selectedCategory by homeViewModel.selectedCategory.collectAsState()
+
     Scaffold(
         bottomBar = {
-            CustomBottomNavigation()
+            CustomBottomNavigation(onFavoriteClick = onFavoriteNavClick)
         },
         containerColor = Color.Black
     ) { innerPadding ->
@@ -159,8 +163,9 @@ fun HomeScreenUI(foodViewModel: FoodViewModel) {
                         CategoryItem(
                             image = category.icon,
                             title = category.name,
-                            isSelected = (category.name == selectedCategory),                             onClick = {
-                                foodViewModel.filterFood(category.name)
+                            isSelected = (category.name == selectedCategory),
+                            onClick = {
+                                homeViewModel.filterFood(category.name)
                             }
                         )
                     }
@@ -186,12 +191,16 @@ fun HomeScreenUI(foodViewModel: FoodViewModel) {
                             name = foodItem.name,
                             price = foodItem.price,
                             imageRes = foodItem.image,
-                            description = foodItem.description
+                            description = foodItem.description,
+                            isFavorite = foodItem.isFavorite, // Передаем состояние
+                            onClick = {
+                                homeViewModel.toggleFavorite(foodItem)
+                            }
                         )
                     }
                 }
 
-                // Второй ряд (просто для красоты, возьмем оставшиеся продукты)
+                // Второй ряд
                 if (foodList.size > 8) {
                     LazyRow(
                         modifier = Modifier.fillMaxWidth(),
@@ -203,7 +212,11 @@ fun HomeScreenUI(foodViewModel: FoodViewModel) {
                                 name = foodItem.name,
                                 price = foodItem.price,
                                 imageRes = foodItem.image,
-                                description = foodItem.description
+                                description = foodItem.description,
+                                isFavorite = foodItem.isFavorite, // Передаем состояние
+                                onClick = {
+                                    homeViewModel.toggleFavorite(foodItem)
+                                }
                             )
                         }
                     }
@@ -216,7 +229,7 @@ fun HomeScreenUI(foodViewModel: FoodViewModel) {
 }
 
 @Composable
-fun CustomBottomNavigation() {
+fun CustomBottomNavigation(onFavoriteClick: () -> Unit) {
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
     
     Box(
@@ -249,17 +262,17 @@ fun CustomBottomNavigation() {
             }
 
             // Остальные иконки
-            BottomIcon(R.drawable.heart)
-            BottomIcon(R.drawable.search)
-            BottomIcon(R.drawable.notification_76)
-            BottomIcon(R.drawable.trolly_25)
+            BottomIcon(iconRes = R.drawable.heart, onClick = onFavoriteClick)
+            BottomIcon(iconRes = R.drawable.search)
+            BottomIcon(iconRes = R.drawable.notification_76)
+            BottomIcon(iconRes = R.drawable.trolly_25)
         }
     }
 }
 
 @Composable
-fun BottomIcon(iconRes: Int) {
-    IconButton(onClick = { }) {
+fun BottomIcon(iconRes: Int, onClick: () -> Unit = {}) {
+    IconButton(onClick = onClick) {
         Icon(
             painter = painterResource(id = iconRes),
             contentDescription = null,

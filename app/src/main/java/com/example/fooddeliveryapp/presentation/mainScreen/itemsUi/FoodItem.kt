@@ -3,6 +3,7 @@ package com.example.fooddeliveryapp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,7 +31,9 @@ fun FoodCard(
     name: String,
     price: String,
     imageRes: Int,
-    description: String
+    description: String,
+    isFavorite: Boolean = false, // Добавили это
+    onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -42,12 +45,14 @@ fun FoodCard(
     ) {
         // Кнопка сердечко в углу
         Icon(
-            painter = painterResource(id = R.drawable.heart), // Замени на свою иконку
+            painter = painterResource(id = R.drawable.heart),
             contentDescription = null,
-            tint = Color.Yellow,
+            // Если в избранном - желтое, иначе белое (или серое)
+            tint = if (isFavorite) Color.Yellow else Color.Gray, 
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .size(24.dp)
+                .clickable { onClick() }
         )
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

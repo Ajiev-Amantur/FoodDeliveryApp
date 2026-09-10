@@ -6,4 +6,5 @@ import com.example.fooddeliveryapp.data.FoodDataModel
 interface GetFoodDataRepository {
     suspend fun getFoodData(): List<FoodDataModel>
     suspend fun getCategories(): List<CategoryDataModel>
+    suspend fun toggleFavorite(foodName: String)
 }
