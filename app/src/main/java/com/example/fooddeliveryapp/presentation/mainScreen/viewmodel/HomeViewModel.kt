@@ -3,7 +3,7 @@ package com.example.fooddeliveryapp.presentation.mainScreen.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fooddeliveryapp.data.CategoryDataModel
-import com.example.fooddeliveryapp.data.FoodDataModel
+import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.domain.repository.GetFoodDataRepository
 import com.example.fooddeliveryapp.domain.usecase.FilterFoodByCategory
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,8 +60,8 @@ class HomeViewModel(
 
     fun toggleFavorite(foodItem: FoodDataModel) {
         viewModelScope.launch {
-            foodRepository.toggleFavorite(foodItem.name)
-            getFoodData() // Refresh list to update UI
+            foodRepository.toggleFavorite(foodItem)
+            getFoodData()
         }
     }
 }

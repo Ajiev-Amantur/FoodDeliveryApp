@@ -1,6 +1,6 @@
 package com.example.fooddeliveryapp.domain.usecase
 
-import com.example.fooddeliveryapp.data.FoodDataModel
+import com.example.fooddeliveryapp.domain.model.FoodDataModel
 
 class GetFavoriteFoodUseCase {
     operator fun invoke(listFood: List<FoodDataModel>): List<FoodDataModel>{

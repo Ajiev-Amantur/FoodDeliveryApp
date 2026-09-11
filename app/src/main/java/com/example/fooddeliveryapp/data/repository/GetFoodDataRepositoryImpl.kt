@@ -2,31 +2,46 @@ package com.example.fooddeliveryapp.data.repository
 
 import com.example.fooddeliveryapp.R
 import com.example.fooddeliveryapp.data.CategoryDataModel
-import com.example.fooddeliveryapp.data.FoodDataModel
+import com.example.fooddeliveryapp.data.FavoriteFoodDao
+import com.example.fooddeliveryapp.data.toEntity
+import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.domain.repository.GetFoodDataRepository
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
-class GetFoodDataRepositoryImpl : GetFoodDataRepository {
+class GetFoodDataRepositoryImpl(private val favoriteFoodDao: FavoriteFoodDao) : GetFoodDataRepository {
 
-    private var foodList = listOf(
-        FoodDataModel("Beef Burger", R.drawable.ic_hamburger, "8.99", "Tasty beef burger with cheese"),
-        FoodDataModel("Veggie Pizza", R.drawable.ic_pizza, "11.99", "Fresh vegetables and mozzarella"),
-        FoodDataModel("Shawarma", R.drawable.ic_doner, "6.50", "Traditional lamb shawarma"),
-        FoodDataModel("Coca Cola", R.drawable.ic_drinks, "2.50", "Original Taste 500ml"),
-        FoodDataModel("Pasta Carbonara", R.drawable.ic_pasta, "12.99", "Classic italian pasta"),
-        FoodDataModel("Sushi Set", R.drawable.ic_sushi, "15.00", "Premium sushi selection"),
-        FoodDataModel("Kebab", R.drawable.ic_kebab, "9.00", "Grilled meat with spices"),
-        FoodDataModel("Bakery Box", R.drawable.ic_bakery, "5.00", "Freshly baked croissants"),
-        FoodDataModel("Cheese Burger", R.drawable.ic_hamburger, "9.50", "Double cheese special"),
-        FoodDataModel("Pepperoni", R.drawable.ic_pizza, "13.00", "Spicy pepperoni pizza"),
-        FoodDataModel("Chicken Doner", R.drawable.ic_doner, "7.00", "Grilled chicken wrap"),
-        FoodDataModel("Orange Juice", R.drawable.ic_drinks, "3.00", "Freshly squeezed juice"),
-        FoodDataModel("Pasta Pesto", R.drawable.ic_pasta, "11.00", "Pasta with fresh basil pesto"),
-        FoodDataModel("Salmon Sushi", R.drawable.ic_sushi, "18.00", "Fresh salmon and avocado"),
-        FoodDataModel("Shish Kebab", R.drawable.ic_kebab, "10.50", "Lamb shish kebab with onions"),
-        FoodDataModel("Apple Pie", R.drawable.ic_bakery, "4.50", "Warm home-made apple pie")
-    )
+    override suspend fun getFoodData(): List<FoodDataModel> {
+       val allFood = listOf(
+            FoodDataModel("Beef Burger", R.drawable.ic_hamburger, "8.99", "Tasty beef burger with cheese"),
+            FoodDataModel("Veggie Pizza", R.drawable.ic_pizza, "11.99", "Fresh vegetables and mozzarella"),
+            FoodDataModel("Shawarma", R.drawable.ic_doner, "6.50", "Traditional lamb shawarma"),
+            FoodDataModel("Coca Cola", R.drawable.ic_drinks, "2.50", "Original Taste 500ml"),
+            FoodDataModel("Pasta Carbonara", R.drawable.ic_pasta, "12.99", "Classic italian pasta"),
+            FoodDataModel("Sushi Set", R.drawable.ic_sushi, "15.00", "Premium sushi selection"),
+            FoodDataModel("Kebab", R.drawable.ic_kebab, "9.00", "Grilled meat with spices"),
+            FoodDataModel("Bakery Box", R.drawable.ic_bakery, "5.00", "Freshly baked croissants"),
+            FoodDataModel("Cheese Burger", R.drawable.ic_hamburger, "9.50", "Double cheese special"),
+            FoodDataModel("Pepperoni", R.drawable.ic_pizza, "13.00", "Spicy pepperoni pizza"),
+            FoodDataModel("Chicken Doner", R.drawable.ic_doner, "7.00", "Grilled chicken wrap"),
+            FoodDataModel("Orange Juice", R.drawable.ic_drinks, "3.00", "Freshly squeezed juice"),
+            FoodDataModel("Pasta Pesto", R.drawable.ic_pasta, "11.00", "Pasta with fresh basil pesto"),
+            FoodDataModel("Salmon Sushi", R.drawable.ic_sushi, "18.00", "Fresh salmon and avocado"),
+            FoodDataModel("Shish Kebab", R.drawable.ic_kebab, "10.50", "Lamb shish kebab with onions"),
+            FoodDataModel("Apple Pie", R.drawable.ic_bakery, "4.50", "Warm home-made apple pie")
+        )
+        val favoriteFoods = favoriteFoodDao.getAllFavorites().first()
+        val favoritesName = favoriteFoods.map { it.name }
+        return allFood.map { foodItem ->
+            if (favoritesName.contains(foodItem.name)){
+                foodItem.copy(isFavorite = true)
+            }else{
+                foodItem
+            }
+        }
+    }
 
-    override suspend fun getFoodData(): List<FoodDataModel> = foodList
 
     override suspend fun getCategories(): List<CategoryDataModel> = listOf(
         CategoryDataModel(1, "All", null),
@@ -39,9 +54,12 @@ class GetFoodDataRepositoryImpl : GetFoodDataRepository {
         CategoryDataModel(8, "Bakery", R.drawable.ic_bakery)
     )
 
-    override suspend fun toggleFavorite(foodName: String) {
-        foodList = foodList.map {
-            if (it.name == foodName) it.copy(isFavorite = !it.isFavorite) else it
+    override suspend fun toggleFavorite(food: FoodDataModel) {
+        val entityFood = food.toEntity()
+        if (food.isFavorite) {
+            favoriteFoodDao.removeFavorite(entityFood)
+        } else {
+            favoriteFoodDao.addFood(entityFood)
         }
     }
 }

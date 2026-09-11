@@ -1,4 +1,4 @@
-package com.example.fooddeliveryapp.data
+package com.example.fooddeliveryapp.domain.model
 
 data class FoodDataModel(
     val name: String,
