@@ -37,11 +37,13 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 @Composable
 fun HomeScreenUI(
     homeViewModel: HomeViewModel,
-    onFavoriteNavClick: () -> Unit
+    onFavoriteNavClick: () -> Unit,
+    onFoodClick: (com.example.fooddeliveryapp.domain.model.FoodDataModel) -> Unit
 ) {
     val foodList by homeViewModel.food.collectAsState()
     val categoryList by homeViewModel.categories.collectAsState()
     val selectedCategory by homeViewModel.selectedCategory.collectAsState()
+    var serachText = homeViewModel.searchQuery
 
     Scaffold(
         bottomBar = {
@@ -98,7 +100,6 @@ fun HomeScreenUI(
                         .padding(top = 20.dp)
                 )
 
-                var searchText by remember { mutableStateOf("") }
                 var isActive by remember { mutableStateOf(false) }
 
                 // Search Bar Row
@@ -110,8 +111,8 @@ fun HomeScreenUI(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     SearchBar(
-                        query = searchText,
-                        onQueryChange = { searchText = it },
+                        query = serachText.value,
+                        onQueryChange = { homeViewModel.updateText(it) },
                         placeholder = { Text("Burger, Pizza, Cake...", color = Color.Gray) },
                         onSearch = { isActive = false },
                         active = false,
@@ -123,7 +124,17 @@ fun HomeScreenUI(
                                 modifier = Modifier.size(24.dp)
                             )
                         },
-                        colors = SearchBarDefaults.colors(containerColor = Color.Transparent),
+                        colors = SearchBarDefaults.colors(
+                            containerColor = Color.Transparent,
+                            inputFieldColors = TextFieldDefaults.colors(
+                                focusedTextColor = Color.White,
+                                unfocusedTextColor = Color.White,
+                                cursorColor = Color.White,
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                disabledContainerColor = Color.Transparent,
+                            )
+                        ),
                         modifier = Modifier
                             .weight(1f)
                             .height(54.dp)
@@ -195,6 +206,9 @@ fun HomeScreenUI(
                             isFavorite = foodItem.isFavorite, // Передаем состояние
                             onClick = {
                                 homeViewModel.toggleFavorite(foodItem)
+                            },
+                            onCardClick = {
+                                onFoodClick(foodItem)
                             }
                         )
                     }
@@ -216,6 +230,9 @@ fun HomeScreenUI(
                                 isFavorite = foodItem.isFavorite, // Передаем состояние
                                 onClick = {
                                     homeViewModel.toggleFavorite(foodItem)
+                                },
+                                onCardClick = {
+                                    onFoodClick(foodItem)
                                 }
                             )
                         }

@@ -1,14 +1,12 @@
 package com.example.fooddeliveryapp.data.repository
 
 import com.example.fooddeliveryapp.R
-import com.example.fooddeliveryapp.data.CategoryDataModel
-import com.example.fooddeliveryapp.data.FavoriteFoodDao
-import com.example.fooddeliveryapp.data.toEntity
+import com.example.fooddeliveryapp.data.local.CategoryDataModel
+import com.example.fooddeliveryapp.data.local.FavoriteFoodDao
+import com.example.fooddeliveryapp.data.mapper.toEntity
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.domain.repository.GetFoodDataRepository
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 
 class GetFoodDataRepositoryImpl(private val favoriteFoodDao: FavoriteFoodDao) : GetFoodDataRepository {
 

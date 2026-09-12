@@ -1,6 +1,6 @@
 package com.example.fooddeliveryapp.domain.repository
 
-import com.example.fooddeliveryapp.data.CategoryDataModel
+import com.example.fooddeliveryapp.data.local.CategoryDataModel
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
 
 interface GetFoodDataRepository {

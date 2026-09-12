@@ -23,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -32,8 +33,9 @@ fun FoodCard(
     price: String,
     imageRes: Int,
     description: String,
-    isFavorite: Boolean = false, // Добавили это
-    onClick: () -> Unit
+    isFavorite: Boolean = false, 
+    onClick: () -> Unit,
+    onCardClick: () -> Unit = {} // Новый параметр для клика на саму карточку
 ) {
     Box(
         modifier = Modifier
@@ -41,6 +43,7 @@ fun FoodCard(
             .padding(8.dp)
             .border(1.dp, Color.Red.copy(alpha = 0.7f), RoundedCornerShape(30.dp))
             .background(Color(0xFF1A1A1A), RoundedCornerShape(30.dp))
+            .clickable { onCardClick() } // Делаем всю карточку кликабельной!
             .padding(16.dp)
     ) {
         // Кнопка сердечко в углу
@@ -63,7 +66,12 @@ fun FoodCard(
                 contentScale = ContentScale.Fit
             )
             Spacer(modifier = Modifier.height(10.dp))
-            Text(text = name, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(text = name, color = Color.White
+                , fontWeight = FontWeight.Bold
+                , fontSize = 18.sp,
+                overflow = TextOverflow.Ellipsis,
+                lineHeight = 22.sp,
+                maxLines = 2)
             Text(
                 text = description,
                 color = Color.Gray,

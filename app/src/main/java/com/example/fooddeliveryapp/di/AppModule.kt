@@ -1,7 +1,7 @@
 package com.example.fooddeliveryapp.di
 
 import androidx.room.Room
-import com.example.fooddeliveryapp.data.FavoriteFoodDataBase
+import com.example.fooddeliveryapp.data.local.FavoriteFoodDataBase
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import com.example.fooddeliveryapp.data.repository.GetFoodDataRepositoryImpl
