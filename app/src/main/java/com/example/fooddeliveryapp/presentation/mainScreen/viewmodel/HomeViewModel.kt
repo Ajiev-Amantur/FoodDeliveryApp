@@ -3,7 +3,7 @@ package com.example.fooddeliveryapp.presentation.mainScreen.viewmodel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fooddeliveryapp.data.local.CategoryDataModel
+import com.example.fooddeliveryapp.domain.model.CategoryDataModel
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.domain.repository.GetFoodDataRepository
 import com.example.fooddeliveryapp.domain.usecase.FilterFoodByCategory

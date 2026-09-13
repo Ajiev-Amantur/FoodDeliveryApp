@@ -1,6 +1,5 @@
 package com.example.fooddeliveryapp.presentation.mainScreen
 
-import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,5 +13,9 @@ object SavedFoodRoute
 
 @Serializable
 data class DetailRoute(
-    val foodItem: FoodDataModel
+    val name: String,
+    val image: Int,
+    val price: String,
+    val description: String,
+    val isFavorite: Boolean
 )

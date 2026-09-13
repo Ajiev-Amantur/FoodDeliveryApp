@@ -1,4 +1,4 @@
-package com.example.fooddeliveryapp.data.local
+package com.example.fooddeliveryapp.domain.model
 
 data class CategoryDataModel(
     val id: Int,

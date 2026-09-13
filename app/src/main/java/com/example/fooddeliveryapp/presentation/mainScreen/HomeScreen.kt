@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.HomeViewModel
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
@@ -38,7 +39,7 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 fun HomeScreenUI(
     homeViewModel: HomeViewModel,
     onFavoriteNavClick: () -> Unit,
-    onFoodClick: (com.example.fooddeliveryapp.domain.model.FoodDataModel) -> Unit
+    onFoodClick: (FoodDataModel) -> Unit
 ) {
     val foodList by homeViewModel.food.collectAsState()
     val categoryList by homeViewModel.categories.collectAsState()

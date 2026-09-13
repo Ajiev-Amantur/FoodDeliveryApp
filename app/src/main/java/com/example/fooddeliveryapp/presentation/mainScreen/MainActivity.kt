@@ -42,26 +42,51 @@ class MainActivity : ComponentActivity() {
                             homeViewModel = homeViewModel,
                             onFavoriteNavClick = { navController.navigate(SavedFoodRoute) },
                             onFoodClick = { foodItem ->
-                                navController.navigate(DetailRoute(foodItem = foodItem))
+                                navController.navigate(
+                                    DetailRoute(
+                                        name = foodItem.name,
+                                        image = foodItem.image,
+                                        price = foodItem.price,
+                                        description = foodItem.description,
+                                        isFavorite = foodItem.isFavorite
+                                    )
+                                )
                             }
                         )
                     }
                     composable<SavedFoodRoute> {
                         val savedViewModel: SavedFoodViewModel = koinViewModel()
-                        SelectedFoodScreen(savedViewModel)
+                        SelectedFoodScreen(
+                            savedFoodViewModel = savedViewModel,
+                            onFoodClick = { foodItem ->
+                                navController.navigate(
+                                    DetailRoute(
+                                        name = foodItem.name,
+                                        image = foodItem.image,
+                                        price = foodItem.price,
+                                        description = foodItem.description,
+                                        isFavorite = foodItem.isFavorite
+                                    )
+                                )
+                            }
+                        )
                     }
                     composable<DetailRoute> { backStackEntry ->
                         val homeViewModel: HomeViewModel = koinViewModel()
-
                         val route: DetailRoute = backStackEntry.toRoute()
-                        // Тут твой FoodDetailsScreen, которому ты теперь сам добавишь параметры, если захочешь
-                        FoodDetailsScreen(foodDataModel = route.foodItem,
-                            onBackClick = {
-                            navController.popBackStack()
-                        },
-                            onFavoriteClick = {
-                                homeViewModel.toggleFavorite(route.foodItem)
-                            }
+                        
+                        val foodItem = com.example.fooddeliveryapp.domain.model.FoodDataModel(
+                            name = route.name,
+                            image = route.image,
+                            price = route.price,
+                            description = route.description,
+                            isFavorite = route.isFavorite
+                        )
+
+                        FoodDetailsScreen(
+                            foodDataModel = foodItem,
+                            onBackClick = { navController.popBackStack() },
+                            onFavoriteClick = { homeViewModel.toggleFavorite(foodItem) }
                         )
                     }
                 }

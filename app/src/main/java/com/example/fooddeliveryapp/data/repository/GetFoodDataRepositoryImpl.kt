@@ -1,12 +1,12 @@
 package com.example.fooddeliveryapp.data.repository
 
 import com.example.fooddeliveryapp.R
-import com.example.fooddeliveryapp.data.local.CategoryDataModel
+import com.example.fooddeliveryapp.domain.model.CategoryDataModel
 import com.example.fooddeliveryapp.data.local.FavoriteFoodDao
 import com.example.fooddeliveryapp.data.mapper.toEntity
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.domain.repository.GetFoodDataRepository
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 
 class GetFoodDataRepositoryImpl(private val favoriteFoodDao: FavoriteFoodDao) : GetFoodDataRepository {
 
@@ -29,7 +29,7 @@ class GetFoodDataRepositoryImpl(private val favoriteFoodDao: FavoriteFoodDao) : 
             FoodDataModel("Shish Kebab", R.drawable.ic_kebab, "10.50", "Lamb shish kebab with onions"),
             FoodDataModel("Apple Pie", R.drawable.ic_bakery, "4.50", "Warm home-made apple pie")
         )
-        val favoriteFoods = favoriteFoodDao.getAllFavorites().first()
+        val favoriteFoods = favoriteFoodDao.getAllFavorites().firstOrNull() ?: emptyList()
         val favoritesName = favoriteFoods.map { it.name }
         return allFood.map { foodItem ->
             if (favoritesName.contains(foodItem.name)){

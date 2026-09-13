@@ -84,7 +84,7 @@ fun FoodDetailsScreen(
                 }
 
                 IconButton(
-                    onClick = { /* В избранное */ },
+                    onClick = onFavoriteClick,
                     modifier = Modifier
                         .size(45.dp)
                         .background(Color(0xFF1A1A1A), RoundedCornerShape(12.dp))
@@ -116,7 +116,7 @@ fun FoodDetailsScreen(
                 )
                 
                 Image(
-                    painter = painterResource(id = R.drawable.ic_hamburger), // Временная картинка
+                    painter = painterResource(id = foodDataModel.image),
                     contentDescription = null,
                     modifier = Modifier.size(230.dp),
                     contentScale = ContentScale.Fit
@@ -132,7 +132,7 @@ fun FoodDetailsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "${foodDataModel.name}",
+                    text = foodDataModel.name,
                     color = Color.White,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
@@ -140,7 +140,7 @@ fun FoodDetailsScreen(
                 )
                 
                 Text(
-                    text = "${foodDataModel.price}",
+                    text = foodDataModel.price,
                     color = Color.Yellow,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.ExtraBold
@@ -151,7 +151,7 @@ fun FoodDetailsScreen(
 
             // Раздел описания
             Text(
-                text = "${foodDataModel.description}",
+                text = "Description",
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
@@ -160,7 +160,7 @@ fun FoodDetailsScreen(
             Spacer(modifier = Modifier.height(10.dp))
             
             Text(
-                text = "Enjoy our signature beef burger with extra cheese, fresh lettuce, and our secret house sauce. Served on a toasted brioche bun.",
+                text = foodDataModel.description,
                 color = Color.Gray,
                 fontSize = 16.sp,
                 lineHeight = 24.sp

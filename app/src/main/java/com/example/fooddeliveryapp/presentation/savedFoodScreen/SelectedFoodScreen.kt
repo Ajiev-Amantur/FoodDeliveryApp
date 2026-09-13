@@ -15,10 +15,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.FoodCard
+import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.viewmodel.SavedFoodViewModel
 
 @Composable
-fun SelectedFoodScreen(savedFoodViewModel: SavedFoodViewModel) {
+fun SelectedFoodScreen(
+    savedFoodViewModel: SavedFoodViewModel,
+    onFoodClick: (FoodDataModel) -> Unit
+) {
     val favoriteFoodList by savedFoodViewModel.favoriteFood.collectAsState()
     
     Scaffold(containerColor = Color.Black) { innerPadding ->
@@ -45,6 +49,9 @@ fun SelectedFoodScreen(savedFoodViewModel: SavedFoodViewModel) {
                         isFavorite = foodItem.isFavorite,
                         onClick = {
                             savedFoodViewModel.toggleFavorite(foodItem)
+                        },
+                        onCardClick = {
+                            onFoodClick(foodItem)
                         }
                     )
                 }
