@@ -2,7 +2,7 @@ package com.example.fooddeliveryapp.data.repository
 
 import com.example.fooddeliveryapp.R
 import com.example.fooddeliveryapp.domain.model.CategoryDataModel
-import com.example.fooddeliveryapp.data.local.FavoriteFoodDao
+import com.example.fooddeliveryapp.data.local.dao.FavoriteFoodDao
 import com.example.fooddeliveryapp.data.mapper.toEntity
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.domain.repository.GetFoodDataRepository

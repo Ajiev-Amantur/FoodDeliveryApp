@@ -39,7 +39,8 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 fun HomeScreenUI(
     homeViewModel: HomeViewModel,
     onFavoriteNavClick: () -> Unit,
-    onFoodClick: (FoodDataModel) -> Unit
+    onFoodClick: (FoodDataModel) -> Unit,
+    onCartClick: () -> Unit
 ) {
     val foodList by homeViewModel.food.collectAsState()
     val categoryList by homeViewModel.categories.collectAsState()
@@ -48,7 +49,10 @@ fun HomeScreenUI(
 
     Scaffold(
         bottomBar = {
-            CustomBottomNavigation(onFavoriteClick = onFavoriteNavClick)
+            CustomBottomNavigation(
+                onFavoriteClick = onFavoriteNavClick,
+                onCartClick = onCartClick
+            )
         },
         containerColor = Color.Black
     ) { innerPadding ->
@@ -247,7 +251,10 @@ fun HomeScreenUI(
 }
 
 @Composable
-fun CustomBottomNavigation(onFavoriteClick: () -> Unit) {
+fun CustomBottomNavigation(
+    onFavoriteClick: () -> Unit,
+    onCartClick: () -> Unit
+) {
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
     
     Box(
@@ -283,7 +290,7 @@ fun CustomBottomNavigation(onFavoriteClick: () -> Unit) {
             BottomIcon(iconRes = R.drawable.heart, onClick = onFavoriteClick)
             BottomIcon(iconRes = R.drawable.search)
             BottomIcon(iconRes = R.drawable.notification_76)
-            BottomIcon(iconRes = R.drawable.trolly_25)
+            BottomIcon(iconRes = R.drawable.trolly_25, onClick = onCartClick)
         }
     }
 }

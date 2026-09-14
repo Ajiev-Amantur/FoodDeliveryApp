@@ -10,7 +10,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.fooddeliveryapp.HomeScreenUI
 import com.example.fooddeliveryapp.OnboardingScreen
+import com.example.fooddeliveryapp.presentation.cartScreen.CartScreen
+import com.example.fooddeliveryapp.presentation.cartScreen.viewModel.CartScreenViewModel
 import com.example.fooddeliveryapp.presentation.detailsScreen.FoodDetailsScreen
+import com.example.fooddeliveryapp.presentation.detailsScreen.viewmodel.DetailScreenViewModel
 import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.HomeViewModel
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.SelectedFoodScreen
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.viewmodel.SavedFoodViewModel
@@ -51,7 +54,8 @@ class MainActivity : ComponentActivity() {
                                         isFavorite = foodItem.isFavorite
                                     )
                                 )
-                            }
+                            },
+                            onCartClick = { navController.navigate(CartRoute) }
                         )
                     }
                     composable<SavedFoodRoute> {
@@ -71,6 +75,10 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
+                    composable<CartRoute> {
+                        val cartViewModel: CartScreenViewModel = koinViewModel()
+                        CartScreen(cartViewModel)
+                    }
                     composable<DetailRoute> { backStackEntry ->
                         val homeViewModel: HomeViewModel = koinViewModel()
                         val route: DetailRoute = backStackEntry.toRoute()
@@ -82,11 +90,14 @@ class MainActivity : ComponentActivity() {
                             description = route.description,
                             isFavorite = route.isFavorite
                         )
-
+                        val detailViewModel: DetailScreenViewModel = koinViewModel()
                         FoodDetailsScreen(
                             foodDataModel = foodItem,
                             onBackClick = { navController.popBackStack() },
-                            onFavoriteClick = { homeViewModel.toggleFavorite(foodItem) }
+                            onFavoriteClick = { homeViewModel.toggleFavorite(foodItem) },
+                            onAddCartClick = { model ->
+                                detailViewModel.addCartFood(model)
+                            }
                         )
                     }
                 }

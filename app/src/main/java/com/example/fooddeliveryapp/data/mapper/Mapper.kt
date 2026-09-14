@@ -1,6 +1,6 @@
 package com.example.fooddeliveryapp.data.mapper
 
-import com.example.fooddeliveryapp.data.local.model.FavoriteFoodEntity
+import com.example.fooddeliveryapp.data.local.entity.FavoriteFoodEntity
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
 
 fun FoodDataModel.toEntity(): FavoriteFoodEntity{

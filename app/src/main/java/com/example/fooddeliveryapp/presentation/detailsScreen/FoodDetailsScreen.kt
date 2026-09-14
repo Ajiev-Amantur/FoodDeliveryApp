@@ -3,6 +3,7 @@ package com.example.fooddeliveryapp.presentation.detailsScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,11 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.R
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
+import com.example.fooddeliveryapp.presentation.detailsScreen.viewmodel.DetailScreenViewModel
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
 @Composable
@@ -30,6 +31,7 @@ fun FoodDetailsScreen(
     foodDataModel: FoodDataModel,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
+    onAddCartClick: (FoodDataModel) -> Unit
 ) {
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
 
@@ -42,6 +44,9 @@ fun FoodDetailsScreen(
                     .fillMaxWidth()
                     .padding(20.dp)
                     .height(60.dp)
+                    .clickable{
+                        onAddCartClick(foodDataModel)
+                    }
                     .background(gradient, RoundedCornerShape(20.dp))
                     .clip(RoundedCornerShape(20.dp)),
                 contentAlignment = Alignment.Center
