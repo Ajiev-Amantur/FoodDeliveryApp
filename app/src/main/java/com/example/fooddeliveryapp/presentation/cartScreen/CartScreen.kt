@@ -35,7 +35,11 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 
 @Composable
 fun CartScreen(
-    cartScreenViewModel: CartScreenViewModel
+    isSelected: Boolean,
+    cartScreenViewModel: CartScreenViewModel,
+    onBackClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
+    onCartClick: () -> Unit
 ) {
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
     val foods by cartScreenViewModel.cartFood.collectAsState()
@@ -51,7 +55,7 @@ fun CartScreen(
             ) {
                 // Кнопка назад
                 IconButton(
-                    onClick = { /* Назад */ },
+                    onClick = { onBackClick() },
                     modifier = Modifier
                         .size(45.dp)
                         .background(Color(0xFF2B2B3D), CircleShape)
@@ -98,6 +102,11 @@ fun CartScreen(
                     fontWeight = FontWeight.Bold
                 )
             }
+            CustomBottomNavigation(
+                onFavoriteClick = { onFavoriteClick},
+                onCartClick = {onCartClick},
+                isSelected = isSelected
+            )
         }
     ) { innerPadding ->
         LazyColumn(
@@ -269,5 +278,64 @@ fun CartItem(
                 }
             }
         }
+    }
+}
+@Composable
+fun CustomBottomNavigation(
+    onFavoriteClick: () -> Unit,
+    onCartClick: () -> Unit,
+    isSelected: Boolean
+) {
+    val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(90.dp)
+            .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
+            .background(Color(0xFF1A1A1A)) // Темно-серый фон бара
+            .padding(horizontal = 30.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Home с градиентным фоном
+            Box(
+                modifier = Modifier
+                    .size(50.dp)
+                    .background(if (isSelected) gradient else
+                        Brush.linearGradient(listOf(Color.Transparent,Color.Transparent))
+                        , RoundedCornerShape(15.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.home_2),
+                    contentDescription = null,
+                    tint = if (isSelected) Color.White else Color.Transparent,
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+
+            // Остальные иконки
+            BottomIcon(iconRes = R.drawable.heart, onClick = onFavoriteClick)
+            BottomIcon(iconRes = R.drawable.search)
+            BottomIcon(iconRes = R.drawable.notification_76)
+            BottomIcon(iconRes = R.drawable.trolly_25, onClick = onCartClick)
+        }
+    }
+}
+
+@Composable
+fun BottomIcon(iconRes: Int, onClick: () -> Unit = {}) {
+    IconButton(onClick = onClick) {
+        Icon(
+            painter = painterResource(id = iconRes),
+            contentDescription = null,
+            tint = Color.Red,
+            modifier = Modifier.size(28.dp)
+        )
     }
 }

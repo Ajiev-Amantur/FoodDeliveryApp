@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "cart_table")
-data class CartEntity(
+data class CartFoodEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,

@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.LinearGradient
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -37,6 +38,7 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenUI(
+    isSelected: Boolean,
     homeViewModel: HomeViewModel,
     onFavoriteNavClick: () -> Unit,
     onFoodClick: (FoodDataModel) -> Unit,
@@ -51,7 +53,8 @@ fun HomeScreenUI(
         bottomBar = {
             CustomBottomNavigation(
                 onFavoriteClick = onFavoriteNavClick,
-                onCartClick = onCartClick
+                onCartClick = onCartClick,
+                isSelected
             )
         },
         containerColor = Color.Black
@@ -253,7 +256,8 @@ fun HomeScreenUI(
 @Composable
 fun CustomBottomNavigation(
     onFavoriteClick: () -> Unit,
-    onCartClick: () -> Unit
+    onCartClick: () -> Unit,
+    isSelected: Boolean
 ) {
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
     
@@ -275,13 +279,15 @@ fun CustomBottomNavigation(
             Box(
                 modifier = Modifier
                     .size(50.dp)
-                    .background(gradient, RoundedCornerShape(15.dp)),
+                    .background(if (isSelected) gradient else
+                        Brush.linearGradient(listOf(Color.Transparent,Color.Transparent))
+                        , RoundedCornerShape(15.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.home_2),
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = if (isSelected) Color.White else Color.Transparent,
                     modifier = Modifier.size(30.dp)
                 )
             }

@@ -1,9 +1,33 @@
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
+    android:width="44dp"
+    android:height="44dp"
+    android:viewportWidth="44"
+    android:viewportHeight="44">
+  <path
+      android:pathData="M20.304,28.764C19.779,28.764 19.38,29.253 19.655,29.701C20.138,30.489 21.008,31.014 22,31.014C22.992,31.014 23.862,30.489 24.346,29.701C24.62,29.253 24.221,28.764 23.696,28.764C23.362,28.764 23.075,28.984 22.824,29.204C22.604,29.397 22.316,29.514 22,29.514C21.684,29.514 21.396,29.397 21.176,29.204C20.925,28.984 20.638,28.764 20.304,28.764Z"
+      android:fillColor="#FF0000"
+      android:fillType="evenOdd"/>
+  <group>
+    <clip-path
+        android:pathData="M29.5,20.85C29.5,17.862 28.017,15.068 25.541,13.394L24.24,12.515C22.887,11.6 21.113,11.6 19.76,12.515L18.459,13.394C15.983,15.068 14.5,17.862 14.5,20.85V22.764C13.886,23.313 13.5,24.111 13.5,25C13.5,26.657 14.843,28 16.5,28H27.5C29.157,28 30.5,26.657 30.5,25C30.5,24.111 30.114,23.313 29.5,22.764V20.85Z"
+        android:fillType="evenOdd"/>
     <path
-        android:fillColor="#FF0000"
-        android:pathData="M12,22c1.1,0 2,-0.9 2,-2h-4c0,1.1 0.9,2 2,2zM18,16v-5c0,-3.07 -1.63,-5.64 -4.5,-6.32V4c0,-0.83 -0.67,-1.5 -1.5,-1.5s-1.5,0.67 -1.5,1.5v0.68C7.64,5.36 6,7.92 6,11v5l-2,2v1h16v-1l-2,-2z"/>
+        android:pathData="M25.541,13.394L24.701,14.637L25.541,13.394ZM29.5,20.85H31H29.5ZM24.24,12.515L25.081,11.272L24.24,12.515ZM19.76,12.515L18.919,11.272L19.76,12.515ZM18.459,13.394L19.299,14.637L18.459,13.394ZM14.5,20.85H16H14.5ZM14.5,22.764L15.5,23.882L16,23.434V22.764H14.5ZM29.5,22.764H28V23.434L28.5,23.882L29.5,22.764ZM24.701,14.637C26.764,16.032 28,18.36 28,20.85H31C31,17.364 29.27,14.104 26.381,12.152L24.701,14.637ZM23.4,13.757L24.701,14.637L26.381,12.152L25.081,11.272L23.4,13.757ZM20.6,13.757C21.446,13.186 22.554,13.186 23.4,13.757L25.081,11.272C23.22,10.014 20.78,10.014 18.919,11.272L20.6,13.757ZM19.299,14.637L20.6,13.757L18.919,11.272L17.619,12.152L19.299,14.637ZM16,20.85C16,18.36 17.236,16.032 19.299,14.637L17.619,12.152C14.731,14.104 13,17.364 13,20.85H16ZM16,22.764V20.85H13V22.764H16ZM15,25C15,24.556 15.191,24.158 15.5,23.882L13.5,21.646C12.581,22.468 12,23.667 12,25H15ZM16.5,26.5C15.672,26.5 15,25.828 15,25H12C12,27.485 14.015,29.5 16.5,29.5V26.5ZM27.5,26.5H16.5V29.5H27.5V26.5ZM29,25C29,25.828 28.328,26.5 27.5,26.5V29.5C29.985,29.5 32,27.485 32,25H29ZM28.5,23.882C28.809,24.158 29,24.556 29,25H32C32,23.667 31.419,22.468 30.5,21.646L28.5,23.882ZM28,20.85V22.764H31V20.85H28Z"
+        android:fillColor="#FF0000"/>
+  </group>
 </vector>

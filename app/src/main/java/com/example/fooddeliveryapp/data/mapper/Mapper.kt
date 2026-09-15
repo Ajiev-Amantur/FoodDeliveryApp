@@ -1,6 +1,8 @@
 package com.example.fooddeliveryapp.data.mapper
 
+import com.example.fooddeliveryapp.data.local.entity.CartFoodEntity
 import com.example.fooddeliveryapp.data.local.entity.FavoriteFoodEntity
+import com.example.fooddeliveryapp.domain.model.CartFoodModel
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
 
 fun FoodDataModel.toEntity(): FavoriteFoodEntity{
@@ -20,5 +22,24 @@ fun FavoriteFoodEntity.toModel(): FoodDataModel{
         price = this.price,
         description = this.description,
         isFavorite = true // Раз оно в этой базе,  значит оно точно в избранном
+    )
+}
+
+fun CartFoodModel.toEntity(): CartFoodEntity{
+    return CartFoodEntity(
+        id = this.id,
+        name = this.name,
+        price = this.price,
+        image = this.image,
+        quantity = this.quantity
+    )
+}
+fun CartFoodEntity.toModel(): CartFoodModel{
+    return CartFoodModel(
+        id = this.id,
+        name = this.name,
+        price = this.price,
+        image = this.image,
+        quantity = this.quantity
     )
 }
