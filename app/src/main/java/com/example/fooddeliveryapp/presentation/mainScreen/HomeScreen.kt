@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.LinearGradient
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -38,7 +37,9 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenUI(
-    isSelected: Boolean,
+    isSelectedHome: Boolean,
+    isSelectedSaved: Boolean,
+    isSelectedCart: Boolean,
     homeViewModel: HomeViewModel,
     onFavoriteNavClick: () -> Unit,
     onFoodClick: (FoodDataModel) -> Unit,
@@ -54,7 +55,9 @@ fun HomeScreenUI(
             CustomBottomNavigation(
                 onFavoriteClick = onFavoriteNavClick,
                 onCartClick = onCartClick,
-                isSelected
+                isSelectedHome = isSelectedHome,
+                isSelectedSaved = isSelectedSaved,
+                isSelectedCart = isSelectedCart
             )
         },
         containerColor = Color.Black
@@ -257,10 +260,10 @@ fun HomeScreenUI(
 fun CustomBottomNavigation(
     onFavoriteClick: () -> Unit,
     onCartClick: () -> Unit,
-    isSelected: Boolean
+    isSelectedHome: Boolean,
+    isSelectedSaved: Boolean,
+    isSelectedCart: Boolean,
 ) {
-    val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
-    
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -275,40 +278,39 @@ fun CustomBottomNavigation(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Home с градиентным фоном
-            Box(
-                modifier = Modifier
-                    .size(50.dp)
-                    .background(if (isSelected) gradient else
-                        Brush.linearGradient(listOf(Color.Transparent,Color.Transparent))
-                        , RoundedCornerShape(15.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.home_2),
-                    contentDescription = null,
-                    tint = if (isSelected) Color.White else Color.Transparent,
-                    modifier = Modifier.size(30.dp)
-                )
-            }
-
-            // Остальные иконки
-            BottomIcon(iconRes = R.drawable.heart, onClick = onFavoriteClick)
+            BottomIcon(iconRes = R.drawable.home_2, onClick = {},isSelectedHome)
+            BottomIcon(iconRes = R.drawable.heart, onClick = onFavoriteClick,isSelectedSaved)
             BottomIcon(iconRes = R.drawable.search)
-            BottomIcon(iconRes = R.drawable.notification_76)
-            BottomIcon(iconRes = R.drawable.trolly_25, onClick = onCartClick)
+            BottomIcon(iconRes = R.drawable.ic_notification)
+            BottomIcon(iconRes = R.drawable.trolly_25, onClick = onCartClick,isSelectedCart)
         }
     }
 }
 
 @Composable
-fun BottomIcon(iconRes: Int, onClick: () -> Unit = {}) {
-    IconButton(onClick = onClick) {
-        Icon(
-            painter = painterResource(id = iconRes),
-            contentDescription = null,
-            tint = Color.Red,
-            modifier = Modifier.size(28.dp)
-        )
+fun BottomIcon(
+    iconRes: Int,
+    onClick: () -> Unit = {},
+    isSelected: Boolean = false
+) {
+    val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
+
+    Box(
+        modifier = Modifier.size(50.dp)
+            .background(
+                if (isSelected) gradient else
+                    Brush.linearGradient(colors = listOf(Color.Transparent, Color.Transparent)),
+                RoundedCornerShape(16.dp)
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        IconButton(onClick = onClick) {
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = null,
+                tint = if (isSelected) Color.White else Color.Red,
+                modifier = Modifier.size(28.dp)
+            )
+        }
     }
 }

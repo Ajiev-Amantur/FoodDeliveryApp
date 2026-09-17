@@ -18,7 +18,7 @@ import com.example.fooddeliveryapp.presentation.cartScreen.viewModel.CartScreenV
 import com.example.fooddeliveryapp.presentation.detailsScreen.FoodDetailsScreen
 import com.example.fooddeliveryapp.presentation.detailsScreen.viewmodel.DetailScreenViewModel
 import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.HomeViewModel
-import com.example.fooddeliveryapp.presentation.savedFoodScreen.SelectedFoodScreen
+import com.example.fooddeliveryapp.presentation.savedFoodScreen.SavedFoodScreen
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.viewmodel.SavedFoodViewModel
 import com.example.fooddeliveryapp.ui.theme.FoodDeliveryAppTheme
 import org.koin.androidx.compose.koinViewModel
@@ -52,6 +52,8 @@ class MainActivity : ComponentActivity() {
                         val homeViewModel: HomeViewModel = koinViewModel()
                         HomeScreenUI(
                             isSelectedHomeScreen,
+                            isSelectedSavedScreen,
+                            isSelectedCartScreen,
                             homeViewModel = homeViewModel,
                             onFavoriteNavClick = { navController.navigate(SavedFoodRoute) },
                             onFoodClick = { foodItem ->
@@ -70,8 +72,10 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<SavedFoodRoute> {
                         val savedViewModel: SavedFoodViewModel = koinViewModel()
-                        SelectedFoodScreen(
-                            isSelectedSavedScreen,
+                        SavedFoodScreen(
+                            isSelectedHome =  isSelectedHomeScreen,
+                            isSelectedSaved = isSelectedSavedScreen,
+                            isSelectedCart = isSelectedCartScreen,
                             savedFoodViewModel = savedViewModel,
                             onFoodClick = { foodItem ->
                                 navController.navigate(
@@ -83,15 +87,25 @@ class MainActivity : ComponentActivity() {
                                         isFavorite = foodItem.isFavorite
                                     )
                                 )
-                            }
+                            },
+                            onFavoriteClick = { navController.navigate(SavedFoodRoute) },
+                            onCartClick = { navController.navigate(CartRoute)},
+                            onHomeClick = { navController.navigate(HomeRoute)},
+                            onBackClick = {navController.popBackStack()}
                         )
                     }
                     composable<CartRoute> {
                         val cartViewModel: CartScreenViewModel = koinViewModel()
                         CartScreen(
+                            isSelectedHomeScreen,
+                            isSelectedSavedScreen,
                             isSelectedCartScreen,
                             cartViewModel,
-                            onBackClick = {navController.popBackStack()})
+                            onBackClick = {navController.popBackStack()},
+                            onFavoriteClick = {navController.navigate(SavedFoodRoute)},
+                            onCartClick = {navController.navigate(CartRoute)},
+                            onHomeClick = {navController.navigate(HomeRoute)}
+                        )
                     }
                     composable<DetailRoute> { backStackEntry ->
                         val homeViewModel: HomeViewModel = koinViewModel()

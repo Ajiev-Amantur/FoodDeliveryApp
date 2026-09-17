@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.R
@@ -35,11 +34,14 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 
 @Composable
 fun CartScreen(
-    isSelected: Boolean,
+    isSelectedHome: Boolean,
+    isSelectedSaved: Boolean,
+    isSelectedCart: Boolean,
     cartScreenViewModel: CartScreenViewModel,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
-    onCartClick: () -> Unit
+    onCartClick: () -> Unit,
+    onHomeClick: () -> Unit
 ) {
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
     val foods by cartScreenViewModel.cartFood.collectAsState()
@@ -85,28 +87,34 @@ fun CartScreen(
             }
         },
         bottomBar = {
-            // Кнопка оформления заказа внизу
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-                    .height(60.dp)
-                    .background(gradient, RoundedCornerShape(20.dp))
-                    .clip(RoundedCornerShape(20.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Checkout",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+            Column(modifier = Modifier.background(Color(0xFF121223))) {
+                // Кнопка оформления заказа внизу
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 10.dp)
+                        .height(60.dp)
+                        .background(gradient, RoundedCornerShape(20.dp))
+                        .clip(RoundedCornerShape(20.dp))
+                        .clickable { /* Checkout action */ },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Checkout",
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                CustomBottomNavigation(
+                    onFavoriteClick = { onFavoriteClick() },
+                    onCartClick = { onCartClick() },
+                    onHomeClick = { onHomeClick() },
+                    isSelectedHome = isSelectedHome,
+                    isSelectedSaved = isSelectedSaved,
+                    isSelectedCart = isSelectedCart
                 )
             }
-            CustomBottomNavigation(
-                onFavoriteClick = { onFavoriteClick},
-                onCartClick = {onCartClick},
-                isSelected = isSelected
-            )
         }
     ) { innerPadding ->
         LazyColumn(
@@ -284,10 +292,11 @@ fun CartItem(
 fun CustomBottomNavigation(
     onFavoriteClick: () -> Unit,
     onCartClick: () -> Unit,
-    isSelected: Boolean
+    onHomeClick: () -> Unit,
+    isSelectedHome: Boolean,
+    isSelectedSaved: Boolean,
+    isSelectedCart: Boolean,
 ) {
-    val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -302,40 +311,40 @@ fun CustomBottomNavigation(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Home с градиентным фоном
-            Box(
-                modifier = Modifier
-                    .size(50.dp)
-                    .background(if (isSelected) gradient else
-                        Brush.linearGradient(listOf(Color.Transparent,Color.Transparent))
-                        , RoundedCornerShape(15.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.home_2),
-                    contentDescription = null,
-                    tint = if (isSelected) Color.White else Color.Transparent,
-                    modifier = Modifier.size(30.dp)
-                )
-            }
-
-            // Остальные иконки
-            BottomIcon(iconRes = R.drawable.heart, onClick = onFavoriteClick)
-            BottomIcon(iconRes = R.drawable.search)
-            BottomIcon(iconRes = R.drawable.notification_76)
-            BottomIcon(iconRes = R.drawable.trolly_25, onClick = onCartClick)
+            BottomIcon(iconRes = R.drawable.home_2, onClick = onHomeClick,isSelectedHome)
+            BottomIcon(iconRes = R.drawable.heart, onClick = onFavoriteClick,isSelectedSaved)
+            BottomIcon(iconRes = R.drawable.search, onClick = {},)
+            BottomIcon(iconRes = R.drawable.ic_notification, onClick = {})
+            BottomIcon(iconRes = R.drawable.trolly_25, onClick = onCartClick,isSelectedCart)
         }
     }
 }
 
 @Composable
-fun BottomIcon(iconRes: Int, onClick: () -> Unit = {}) {
-    IconButton(onClick = onClick) {
-        Icon(
-            painter = painterResource(id = iconRes),
-            contentDescription = null,
-            tint = Color.Red,
-            modifier = Modifier.size(28.dp)
-        )
+fun BottomIcon(
+    iconRes: Int,
+    onClick: () -> Unit,
+    isSelected: Boolean = false
+) {
+    val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
+
+    Box(
+        modifier = Modifier
+            .size(50.dp)
+            .background(
+                if (isSelected) gradient else
+                    Brush.linearGradient(listOf(Color.Transparent, Color.Transparent)),
+                RoundedCornerShape(15.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        IconButton(onClick = onClick) {
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = null,
+                tint = if (isSelected) Color.White else Color.Red,
+                modifier = Modifier.size(28.dp)
+            )
+        }
     }
 }
