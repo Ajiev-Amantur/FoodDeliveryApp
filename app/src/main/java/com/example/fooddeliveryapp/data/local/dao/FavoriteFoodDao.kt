@@ -16,6 +16,12 @@ interface FavoriteFoodDao {
     @Delete
     suspend fun removeFavorite(food: FavoriteFoodEntity)
 
+    @Query("DELETE FROM favorites WHERE name = :name")
+    suspend fun deleteFavoriteByName(name: String)
+
+    @Query("SELECT EXISTS(SELECT 1 FROM favorites WHERE name = :name)")
+    suspend fun isFavorite(name: String): Boolean
+
     @Query("SELECT * FROM favorites")
      fun getAllFavorites(): Flow<List<FavoriteFoodEntity>>
 }

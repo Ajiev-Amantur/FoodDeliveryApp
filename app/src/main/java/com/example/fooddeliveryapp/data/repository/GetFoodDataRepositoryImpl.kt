@@ -53,11 +53,11 @@ class GetFoodDataRepositoryImpl(private val favoriteFoodDao: FavoriteFoodDao) : 
     )
 
     override suspend fun toggleFavorite(food: FoodDataModel) {
-        val entityFood = food.toEntity()
-        if (food.isFavorite) {
-            favoriteFoodDao.removeFavorite(entityFood)
+        val isAlreadyFavorite = favoriteFoodDao.isFavorite(food.name)
+        if (isAlreadyFavorite) {
+            favoriteFoodDao.deleteFavoriteByName(food.name)
         } else {
-            favoriteFoodDao.addFood(entityFood)
+            favoriteFoodDao.addFood(food.toEntity())
         }
     }
 }

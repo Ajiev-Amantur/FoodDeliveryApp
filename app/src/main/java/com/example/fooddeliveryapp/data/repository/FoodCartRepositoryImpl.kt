@@ -9,12 +9,20 @@ import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.domain.repository.CartFoodRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.Locale
 
 class FoodCartRepositoryImpl(val cartFoodDao: CartFoodDao): CartFoodRepository {
     override suspend fun addFoodCart(foodItem: FoodDataModel) {
         val savedCartFood = cartFoodDao.getItemByName(foodItem.name)
         if (savedCartFood != null){
-            val updatedCartFood = savedCartFood.copy(quantity = savedCartFood.quantity + 1)
+            val currentPrice = savedCartFood.price.toDoubleOrNull() ?: 0.0
+            val addedPrice = foodItem.price.toDoubleOrNull() ?: 0.0
+            val newPrice = String.format(java.util.Locale.US, "%.2f", currentPrice + addedPrice)
+
+            val updatedCartFood = savedCartFood.copy(
+                quantity = savedCartFood.quantity + 1,
+                price = newPrice
+            )
             cartFoodDao.addFood(updatedCartFood)
         }else{
             val itemFood = CartFoodEntity(
@@ -29,8 +37,16 @@ class FoodCartRepositoryImpl(val cartFoodDao: CartFoodDao): CartFoodRepository {
 
     override suspend fun decreaseFoodCart(cartItem: CartFoodModel) {
         val cartFoodModel = cartItem.toEntity()
+        val savedCardFood = cartFoodDao.getItemByName(cartItem.name)
         if (cartFoodModel.quantity > 1) {
-            cartFoodDao.addFood(cartFoodModel.copy(quantity = cartFoodModel.quantity - 1))
+            val price = cartItem.price.toDoubleOrNull() ?: 0.0
+            val addedPrice = savedCardFood?.price?.toDoubleOrNull()?: 0.0
+            val newPrice = String.format(Locale.US,"%0.2f",price - addedPrice)
+            cartFoodDao.addFood(cartFoodModel.copy(
+                quantity = cartFoodModel.quantity - 1,
+                price = newPrice
+            )
+            )
         } else {
             cartFoodDao.deleteFood(cartFoodModel)
         }

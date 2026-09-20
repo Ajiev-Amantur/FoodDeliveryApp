@@ -7,12 +7,13 @@ import com.example.fooddeliveryapp.domain.model.CartFoodModel
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.domain.repository.CartFoodRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class CartScreenViewModel(private val cartFoodRepository: CartFoodRepository): ViewModel() {
 
     private var _cartFood = MutableStateFlow<List<CartFoodModel>>(emptyList())
-    val cartFood : MutableStateFlow<List<CartFoodModel>> = _cartFood
+    val cartFood : StateFlow<List<CartFoodModel>> = _cartFood
     fun addFoodCart(foodItem: FoodDataModel){
         viewModelScope.launch {
             cartFoodRepository.addFoodCart(foodItem)

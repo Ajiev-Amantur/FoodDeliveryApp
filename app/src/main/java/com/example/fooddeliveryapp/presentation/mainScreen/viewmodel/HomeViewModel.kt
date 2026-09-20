@@ -63,7 +63,7 @@ class HomeViewModel(
                 val categories = foodRepository.getCategories()
                 _categories.value = categories
             } catch (e: Exception) {
-                // Handle error
+                println(e)
             }
         }
     }

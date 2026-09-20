@@ -34,6 +34,8 @@ import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.HomeViewMod
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
 
+import com.example.fooddeliveryapp.presentation.components.CustomBottomNavigation
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenUI(
@@ -256,61 +258,3 @@ fun HomeScreenUI(
     }
 }
 
-@Composable
-fun CustomBottomNavigation(
-    onFavoriteClick: () -> Unit,
-    onCartClick: () -> Unit,
-    isSelectedHome: Boolean,
-    isSelectedSaved: Boolean,
-    isSelectedCart: Boolean,
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(90.dp)
-            .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-            .background(Color(0xFF1A1A1A)) // Темно-серый фон бара
-            .padding(horizontal = 30.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            BottomIcon(iconRes = R.drawable.home_2, onClick = {},isSelectedHome)
-            BottomIcon(iconRes = R.drawable.heart, onClick = onFavoriteClick,isSelectedSaved)
-            BottomIcon(iconRes = R.drawable.search)
-            BottomIcon(iconRes = R.drawable.ic_notification)
-            BottomIcon(iconRes = R.drawable.trolly_25, onClick = onCartClick,isSelectedCart)
-        }
-    }
-}
-
-@Composable
-fun BottomIcon(
-    iconRes: Int,
-    onClick: () -> Unit = {},
-    isSelected: Boolean = false
-) {
-    val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
-
-    Box(
-        modifier = Modifier.size(50.dp)
-            .background(
-                if (isSelected) gradient else
-                    Brush.linearGradient(colors = listOf(Color.Transparent, Color.Transparent)),
-                RoundedCornerShape(16.dp)
-            ),
-        contentAlignment = Alignment.Center,
-    ) {
-        IconButton(onClick = onClick) {
-            Icon(
-                painter = painterResource(id = iconRes),
-                contentDescription = null,
-                tint = if (isSelected) Color.White else Color.Red,
-                modifier = Modifier.size(28.dp)
-            )
-        }
-    }
-}

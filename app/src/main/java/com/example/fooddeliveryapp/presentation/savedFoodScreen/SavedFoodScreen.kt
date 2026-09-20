@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -18,18 +19,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.FoodCard
-import com.example.fooddeliveryapp.R
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.viewmodel.SavedFoodViewModel
-import com.example.fooddeliveryapp.ui.theme.GradientEnd
-import com.example.fooddeliveryapp.ui.theme.GradientStart
+import com.example.fooddeliveryapp.presentation.components.CustomBottomNavigation
 
 @Composable
 fun SavedFoodScreen(
@@ -59,6 +55,16 @@ fun SavedFoodScreen(
         containerColor = Color.Black
     )
     { innerPadding ->
+        if (favoriteFoodList.isEmpty()){
+            Box(modifier = Modifier.fillMaxSize()
+                .padding(innerPadding),
+                contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(
+                    color = Color(0xFF00C569),
+                    trackColor = Color.Gray.copy(0.2f)
+                )
+            }
+        }else{
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -68,7 +74,7 @@ fun SavedFoodScreen(
             IconButton(
                 onClick = { onBackClick() },
                 modifier = Modifier
-                    .padding(start = 16.dp, top = 8.dp)
+                    .padding(start = 20.dp, top = 8.dp)
                     .size(45.dp)
                     .background(Color(0xFF1A1A1A), RoundedCornerShape(12.dp))
                     .border(1.dp, Color.Gray.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
@@ -110,68 +116,4 @@ fun SavedFoodScreen(
             }
         }
     }
-}
-    @Composable
-    fun CustomBottomNavigation(
-        onFavoriteClick: () -> Unit,
-        onCartClick: () -> Unit,
-        onHomeClick: () -> Unit,
-        isSelectedHome: Boolean,
-        isSelectedSaved: Boolean,
-        isSelectedCart: Boolean,
-    ) {
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(90.dp)
-                .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-                .background(Color(0xFF1A1A1A)) // Темно-серый фон бара
-                .padding(horizontal = 30.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Остальные иконки
-                BottomIcon(iconRes = R.drawable.home_2, onClick = onHomeClick, isSelected = isSelectedHome)
-                BottomIcon(
-                    iconRes = R.drawable.heart,
-                    onClick = onFavoriteClick,
-                    isSelected = isSelectedSaved
-                )
-                BottomIcon(iconRes = R.drawable.search, onClick = { })
-                BottomIcon(iconRes = R.drawable.ic_notification, onClick = {})
-                BottomIcon(iconRes = R.drawable.trolly_25, onClick = onCartClick, isSelected = isSelectedCart)
-            }
-        }
-    }
-
-    @Composable
-    fun BottomIcon(
-        iconRes: Int, onClick: () -> Unit = {},
-        isSelected: Boolean = false
-    ) {
-        val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
-        Box(
-            modifier = Modifier.size(50.dp)
-                .background(
-                    if (isSelected) gradient else
-                        Brush.linearGradient(colors = listOf(Color.Transparent, Color.Transparent)),
-                    RoundedCornerShape(16.dp)
-
-                ),
-            contentAlignment = Alignment.Center,
-        ) {
-            IconButton(onClick = onClick) {
-                Icon(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = null,
-                    tint = if (isSelected) Color.White else Color.Red,
-                    modifier = Modifier.size(28.dp)
-                )
-            }
-        }
-    }
+}}

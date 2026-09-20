@@ -14,6 +14,7 @@ import androidx.navigation.toRoute
 import com.example.fooddeliveryapp.HomeScreenUI
 import com.example.fooddeliveryapp.OnboardingScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.CartScreen
+import com.example.fooddeliveryapp.presentation.cartScreen.PaymentScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.viewModel.CartScreenViewModel
 import com.example.fooddeliveryapp.presentation.detailsScreen.FoodDetailsScreen
 import com.example.fooddeliveryapp.presentation.detailsScreen.viewmodel.DetailScreenViewModel
@@ -51,9 +52,9 @@ class MainActivity : ComponentActivity() {
                     composable<HomeRoute> {
                         val homeViewModel: HomeViewModel = koinViewModel()
                         HomeScreenUI(
-                            isSelectedHomeScreen,
-                            isSelectedSavedScreen,
-                            isSelectedCartScreen,
+                            isSelectedHome = isSelectedHomeScreen,
+                            isSelectedSaved = isSelectedSavedScreen,
+                            isSelectedCart = isSelectedCartScreen,
                             homeViewModel = homeViewModel,
                             onFavoriteNavClick = { navController.navigate(SavedFoodRoute) },
                             onFoodClick = { foodItem ->
@@ -97,14 +98,15 @@ class MainActivity : ComponentActivity() {
                     composable<CartRoute> {
                         val cartViewModel: CartScreenViewModel = koinViewModel()
                         CartScreen(
-                            isSelectedHomeScreen,
-                            isSelectedSavedScreen,
-                            isSelectedCartScreen,
-                            cartViewModel,
+                            cartScreenViewModel = cartViewModel,
                             onBackClick = {navController.popBackStack()},
-                            onFavoriteClick = {navController.navigate(SavedFoodRoute)},
-                            onCartClick = {navController.navigate(CartRoute)},
-                            onHomeClick = {navController.navigate(HomeRoute)}
+                            onPaymentClick = {navController.navigate(PaymentRoute)}
+                        )
+                    }
+                    composable<PaymentRoute>{
+                        PaymentScreen(
+                            onBackClick = {navController.popBackStack()},
+                            onConfirmClick = {navController.popBackStack()}
                         )
                     }
                     composable<DetailRoute> { backStackEntry ->

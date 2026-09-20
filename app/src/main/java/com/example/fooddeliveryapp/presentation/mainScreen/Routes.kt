@@ -15,6 +15,9 @@ object SavedFoodRoute
 object CartRoute
 
 @Serializable
+object PaymentRoute
+
+@Serializable
 data class DetailRoute(
     val name: String,
     val image: Int,
