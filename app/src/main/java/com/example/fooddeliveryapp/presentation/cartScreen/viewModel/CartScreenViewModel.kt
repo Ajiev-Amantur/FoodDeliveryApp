@@ -1,5 +1,6 @@
 package com.example.fooddeliveryapp.presentation.cartScreen.viewModel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fooddeliveryapp.data.local.entity.CartFoodEntity
@@ -14,6 +15,11 @@ class CartScreenViewModel(private val cartFoodRepository: CartFoodRepository): V
 
     private var _cartFood = MutableStateFlow<List<CartFoodModel>>(emptyList())
     val cartFood : StateFlow<List<CartFoodModel>> = _cartFood
+
+    var textNameHolder = mutableStateOf("")
+    var cardNumber = mutableStateOf("")
+    var expireDateCard = mutableStateOf("")
+    var CVC = mutableStateOf("")
     fun addFoodCart(foodItem: FoodDataModel){
         viewModelScope.launch {
             cartFoodRepository.addFoodCart(foodItem)

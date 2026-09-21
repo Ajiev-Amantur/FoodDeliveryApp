@@ -158,13 +158,15 @@ fun CartScreen(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
+
                     Text(
                         text = "2118 Thornridge Cir. Syracuse",
                         color = Color.White,
                         fontSize = 16.sp,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(Color(0xFF2B2B3D), RoundedCornerShape(10.dp))
+                            .background(Color(0xFF2B2B3D),
+                                RoundedCornerShape(10.dp))
                             .padding(15.dp)
                     )
 

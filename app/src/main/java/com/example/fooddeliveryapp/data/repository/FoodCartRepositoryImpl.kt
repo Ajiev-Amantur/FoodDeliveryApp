@@ -16,8 +16,8 @@ class FoodCartRepositoryImpl(val cartFoodDao: CartFoodDao): CartFoodRepository {
         val savedCartFood = cartFoodDao.getItemByName(foodItem.name)
         if (savedCartFood != null){
             val currentPrice = savedCartFood.price.toDoubleOrNull() ?: 0.0
-            val addedPrice = foodItem.price.toDoubleOrNull() ?: 0.0
-            val newPrice = String.format(java.util.Locale.US, "%.2f", currentPrice + addedPrice)
+            val unitPrice = currentPrice  /savedCartFood.quantity
+            val newPrice = String.format(java.util.Locale.US, "%.2f", currentPrice + unitPrice)
 
             val updatedCartFood = savedCartFood.copy(
                 quantity = savedCartFood.quantity + 1,
@@ -37,11 +37,11 @@ class FoodCartRepositoryImpl(val cartFoodDao: CartFoodDao): CartFoodRepository {
 
     override suspend fun decreaseFoodCart(cartItem: CartFoodModel) {
         val cartFoodModel = cartItem.toEntity()
-        val savedCardFood = cartFoodDao.getItemByName(cartItem.name)
+
         if (cartFoodModel.quantity > 1) {
             val price = cartItem.price.toDoubleOrNull() ?: 0.0
-            val addedPrice = savedCardFood?.price?.toDoubleOrNull()?: 0.0
-            val newPrice = String.format(Locale.US,"%0.2f",price - addedPrice)
+            val unitPrice = price / cartItem.quantity // Вычисляем цену за 1 штуку
+            val newPrice = String.format(Locale.US, "%.2f", price - unitPrice)
             cartFoodDao.addFood(cartFoodModel.copy(
                 quantity = cartFoodModel.quantity - 1,
                 price = newPrice

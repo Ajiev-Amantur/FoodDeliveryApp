@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -29,6 +28,7 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 @Composable
 fun PaymentScreen(
     onBackClick: () -> Unit,
+    onAddCardClick: () -> Unit,
     onConfirmClick: () -> Unit
 ) {
     var selectedMethod by remember { mutableStateOf("Mastercard") }
@@ -177,7 +177,7 @@ fun PaymentScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { /* Add new card action */ },
+                    .clickable { onAddCardClick() },
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {

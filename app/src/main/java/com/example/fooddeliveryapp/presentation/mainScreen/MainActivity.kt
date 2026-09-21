@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.fooddeliveryapp.HomeScreenUI
 import com.example.fooddeliveryapp.OnboardingScreen
+import com.example.fooddeliveryapp.presentation.cartScreen.AddCardScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.CartScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.PaymentScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.viewModel.CartScreenViewModel
@@ -106,7 +107,25 @@ class MainActivity : ComponentActivity() {
                     composable<PaymentRoute>{
                         PaymentScreen(
                             onBackClick = {navController.popBackStack()},
-                            onConfirmClick = {navController.popBackStack()}
+                            onAddCardClick = {navController.navigate(AddCardRoute)},
+                            onConfirmClick = {navController.navigate(SuccessRoute)}
+                        )
+                    }
+                    composable<AddCardRoute>{
+                        val cartScreenViewModel: CartScreenViewModel = koinViewModel()
+                        AddCardScreen(
+                            onBackClick = {navController.popBackStack()},
+                            cartScreenViewModel = cartScreenViewModel,
+                            onAddClick = {navController.navigate(SuccessRoute)}
+                        )
+                    }
+                    composable<SuccessRoute> {
+                        com.example.fooddeliveryapp.presentation.cartScreen.SuccessScreen(
+                            onTrackOrderClick = {
+                                navController.navigate(HomeRoute) {
+                                    popUpTo(HomeRoute) { inclusive = true }
+                                }
+                            }
                         )
                     }
                     composable<DetailRoute> { backStackEntry ->
