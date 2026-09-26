@@ -1,8 +1,10 @@
 package com.example.fooddeliveryapp.di
 
 import androidx.room.Room
+import com.example.fooddeliveryapp.data.local.database.CardDataDatabase
 import com.example.fooddeliveryapp.data.local.database.CartFoodDataBase
 import com.example.fooddeliveryapp.data.local.database.FavoriteFoodDataBase
+import com.example.fooddeliveryapp.data.local.entity.CardDataEntity
 import com.example.fooddeliveryapp.data.repository.FoodCartRepositoryImpl
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -20,7 +22,7 @@ import org.koin.android.ext.koin.androidContext
 val appModule = module {
     // Репозитории
     single<GetFoodDataRepository> { GetFoodDataRepositoryImpl(get()) }
-    single<CartFoodRepository> { FoodCartRepositoryImpl(get()) } // ДОБАВИЛИ
+    single<CartFoodRepository> { FoodCartRepositoryImpl(get(), get()) }
 
     // ViewModels
     viewModel { HomeViewModel(get(), FilterFoodByCategory()) }
@@ -46,4 +48,13 @@ val appModule = module {
         ).build()
     }
     single { get<CartFoodDataBase>().cartDao() }
+    
+    single { 
+        Room.databaseBuilder(
+            androidContext(),
+            CardDataDatabase::class.java,
+            "card_data_db"
+        ).build()
+    }
+    single { get<CardDataDatabase>().cartDataDao() }
 }

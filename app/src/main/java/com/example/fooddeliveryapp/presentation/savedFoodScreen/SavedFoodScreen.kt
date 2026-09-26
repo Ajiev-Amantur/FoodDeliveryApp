@@ -26,6 +26,8 @@ import com.example.fooddeliveryapp.FoodCard
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.viewmodel.SavedFoodViewModel
 import com.example.fooddeliveryapp.presentation.components.CustomBottomNavigation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 
 @Composable
 fun SavedFoodScreen(
@@ -55,16 +57,6 @@ fun SavedFoodScreen(
         containerColor = Color.Black
     )
     { innerPadding ->
-        if (favoriteFoodList.isEmpty()){
-            Box(modifier = Modifier.fillMaxSize()
-                .padding(innerPadding),
-                contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(
-                    color = Color(0xFF00C569),
-                    trackColor = Color.Gray.copy(0.2f)
-                )
-            }
-        }else{
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -116,4 +108,4 @@ fun SavedFoodScreen(
             }
         }
     }
-}}
+}

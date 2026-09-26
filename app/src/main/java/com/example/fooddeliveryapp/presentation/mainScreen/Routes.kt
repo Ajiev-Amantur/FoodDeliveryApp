@@ -17,7 +17,7 @@ object CartRoute
 @Serializable
 object PaymentRoute
 @Serializable
-object AddCardRoute
+data class AddCardRoute(val cardName: String)
 @Serializable
 object SuccessRoute
 @Serializable

@@ -1,9 +1,12 @@
 package com.example.fooddeliveryapp.data.repository
 
+import com.example.fooddeliveryapp.data.local.dao.CardDataDao
 import com.example.fooddeliveryapp.data.local.dao.CartFoodDao
+import com.example.fooddeliveryapp.data.local.entity.CardDataEntity
 import com.example.fooddeliveryapp.data.local.entity.CartFoodEntity
 import com.example.fooddeliveryapp.data.mapper.toEntity
 import com.example.fooddeliveryapp.data.mapper.toModel
+import com.example.fooddeliveryapp.domain.model.CardDataModel
 import com.example.fooddeliveryapp.domain.model.CartFoodModel
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
 import com.example.fooddeliveryapp.domain.repository.CartFoodRepository
@@ -11,7 +14,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.util.Locale
 
-class FoodCartRepositoryImpl(val cartFoodDao: CartFoodDao): CartFoodRepository {
+class FoodCartRepositoryImpl(
+    val cartFoodDao: CartFoodDao,
+    val cardDataDao: CardDataDao
+): CartFoodRepository {
     override suspend fun addFoodCart(foodItem: FoodDataModel) {
         val savedCartFood = cartFoodDao.getItemByName(foodItem.name)
         if (savedCartFood != null){
@@ -60,6 +66,26 @@ class FoodCartRepositoryImpl(val cartFoodDao: CartFoodDao): CartFoodRepository {
 
     override fun getCartFoods(): Flow<List<CartFoodModel>> {
         return cartFoodDao.getAllCartFood().map { list ->
+            list.map { it.toModel() }
+        }
+    }
+
+    override suspend fun addCard(cardData: CardDataModel) {
+        val cardDataEntity = cardData.toEntity()
+        cardDataDao.addCard(
+            CardDataEntity(
+                cardDataEntity.id,
+                cardName = cardData.cardName,
+                cardDataEntity.holderName,
+                cardDataEntity.cardNumber,
+                cardDataEntity.dateCard,
+                cardDataEntity.CVC
+            )
+        )
+    }
+
+    override suspend fun getAllDataCards(): Flow<List<CardDataModel>> {
+        return cardDataDao.getAllCards().map { list ->
             list.map { it.toModel() }
         }
     }

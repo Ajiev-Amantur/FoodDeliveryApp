@@ -40,6 +40,7 @@ import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
 
 import com.example.fooddeliveryapp.presentation.components.CustomBottomNavigation
+import java.util.Locale
 
 @Composable
 fun CartScreen(
@@ -47,16 +48,15 @@ fun CartScreen(
     onBackClick: () -> Unit,
     onPaymentClick: () -> Unit
 ) {
-    val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
     val foods by cartScreenViewModel.cartFood.collectAsState()
     var isSelected by remember { mutableStateOf(false) }
-
+    var priceFood by cartScreenViewModel.totalPrice
     Scaffold(
         containerColor = Color.Black, // Сделал фон черным
         topBar = {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth().statusBarsPadding()
                     .padding(horizontal = 20.dp, vertical = 20.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -165,8 +165,10 @@ fun CartScreen(
                         fontSize = 16.sp,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(Color(0xFF2B2B3D),
-                                RoundedCornerShape(10.dp))
+                            .background(
+                                Color(0xFF2B2B3D),
+                                RoundedCornerShape(10.dp)
+                            )
                             .padding(15.dp)
                     )
 
@@ -177,6 +179,12 @@ fun CartScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+
+                        val foodPrice = foods.sumOf { foodPrice ->
+                            foodPrice.price.toDoubleOrNull() ?: 0.0
+                        }
+                        priceFood = foodPrice
+
                         Text(
                             text = buildAnnotatedString {
                                 withStyle(
@@ -191,12 +199,14 @@ fun CartScreen(
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.ExtraBold
                                     )
-                                ) { append("$96") }
+                                ) {
+                                    append(String.format(Locale.US,"$%.2f",priceFood.toDouble()))
                             }
+                    }
                         )
+
                         Text("Breakdown >", color = Color(0xFFFE724C), fontSize = 14.sp)
                     }
-
                     Spacer(modifier = Modifier.height(20.dp))
 
                     // Кнопка Place Order тоже с градиентом
@@ -209,7 +219,9 @@ fun CartScreen(
                                 RoundedCornerShape(20.dp)
                             )
                             .clip(RoundedCornerShape(20.dp))
-                            .clickable { onPaymentClick()},
+                            .clickable {
+                                onPaymentClick()
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Text(

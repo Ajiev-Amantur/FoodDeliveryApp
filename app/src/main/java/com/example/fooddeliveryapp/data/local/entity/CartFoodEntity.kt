@@ -8,7 +8,7 @@ data class CartFoodEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,
-    val price: String,
+    var price: String,
     val image: Int,
     val quantity: Int = 1 // По умолчанию 1 штука
 )

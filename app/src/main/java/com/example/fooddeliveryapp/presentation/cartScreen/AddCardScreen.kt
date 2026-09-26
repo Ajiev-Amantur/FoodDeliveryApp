@@ -3,7 +3,6 @@ package com.example.fooddeliveryapp.presentation.cartScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +22,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,20 +43,39 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 
 @Composable
 fun AddCardScreen(
+    nameCard: String,
     onBackClick: () -> Unit,
     cartScreenViewModel: CartScreenViewModel,
     onAddClick: () -> Unit
 ) {
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
     var textName by cartScreenViewModel.textNameHolder
+    var cardType by cartScreenViewModel.cardName
     var textCardNumber by cartScreenViewModel.cardNumber
     var textExpireDate by cartScreenViewModel.expireDateCard
     var textCVC by cartScreenViewModel.CVC
+    var stateTextname by remember{mutableStateOf("")}
+    var stateCardNumber by remember{mutableStateOf("")}
+    var stateEexpireDate by remember{mutableStateOf("")}
+    var stateCVC by remember{mutableStateOf("")}
     Scaffold(
         containerColor = Color.Black,
         bottomBar = {
             Button(
-                onClick = { onAddClick() },
+                onClick = {
+                    if (stateTextname.isNotEmpty() &&
+                        stateCardNumber.isNotEmpty() &&
+                        stateEexpireDate.isNotEmpty() &&
+                        stateCVC.isNotEmpty()) {
+                        cardType = nameCard
+                        textName = stateTextname
+                        textCardNumber = stateCardNumber
+                        textExpireDate = stateEexpireDate
+                        textCVC = stateCVC
+                        cartScreenViewModel.addCard()
+                        onAddClick()
+                    }
+                          },
                 modifier = Modifier.fillMaxWidth()
                     .padding(20.dp)
                 .height(60.dp)
@@ -107,8 +126,14 @@ fun AddCardScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedTextField(
-                value = textName,
-                onValueChange = { textName = it },
+                value = stateTextname,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedBorderColor = Color(0xFFFE724C),
+                    unfocusedBorderColor = Color.White
+                ),
+                onValueChange = { stateTextname = it },
                 placeholder = { Text("Ajiev Amantur")},
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
@@ -123,8 +148,14 @@ fun AddCardScreen(
                 modifier = Modifier.padding(top = 6.dp)
             )
             OutlinedTextField(
-                value = textCardNumber,
-                onValueChange = { textCardNumber = it },
+                value = stateCardNumber,
+                onValueChange = { stateCardNumber = it },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedBorderColor = Color(0xFFFE724C),
+                    unfocusedBorderColor = Color.White
+                ),
                 placeholder = { Text("---- ---- ---- ----") },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
@@ -144,9 +175,15 @@ fun AddCardScreen(
                         color = Color.White
                     )
                     OutlinedTextField(
-                        value = textExpireDate,
-                        onValueChange = { textExpireDate = it },
+                        value = stateEexpireDate,
+                        onValueChange = { stateEexpireDate = it },
                         placeholder = { Text("mm/yyyy") },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White,
+                            focusedBorderColor = Color(0xFFFE724C),
+                            unfocusedBorderColor = Color.White
+                        ),
                         shape = RoundedCornerShape(12.dp),
                     )
                 }
@@ -160,8 +197,14 @@ fun AddCardScreen(
                         color = Color.White
                     )
                     OutlinedTextField(
-                        value = textCVC,
-                        onValueChange = { textCVC = it },
+                        value = stateCVC,
+                        onValueChange = { stateCVC = it },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White,
+                            focusedBorderColor = Color(0xFFFE724C),
+                            unfocusedBorderColor = Color.White
+                        ),
                         placeholder = { Text("***") },
                         shape = RoundedCornerShape(12.dp)
                     )

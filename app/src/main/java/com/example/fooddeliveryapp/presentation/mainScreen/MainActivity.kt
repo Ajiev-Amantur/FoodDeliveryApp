@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -96,24 +97,34 @@ class MainActivity : ComponentActivity() {
                             onBackClick = {navController.popBackStack()}
                         )
                     }
-                    composable<CartRoute> {
-                        val cartViewModel: CartScreenViewModel = koinViewModel()
+                    composable<CartRoute> { navBackEntry ->
+                        val cartViewModel: CartScreenViewModel = koinViewModel(viewModelStoreOwner =navBackEntry )
                         CartScreen(
                             cartScreenViewModel = cartViewModel,
                             onBackClick = {navController.popBackStack()},
                             onPaymentClick = {navController.navigate(PaymentRoute)}
                         )
                     }
-                    composable<PaymentRoute>{
+                    composable<PaymentRoute>{ navBackEntry ->
+                        var cartEntry = remember(navBackEntry) {
+                            navController.getBackStackEntry<CartRoute>()
+                        }
+                        val cartScreenViewModel: CartScreenViewModel = koinViewModel(viewModelStoreOwner =cartEntry)
                         PaymentScreen(
                             onBackClick = {navController.popBackStack()},
-                            onAddCardClick = {navController.navigate(AddCardRoute)},
-                            onConfirmClick = {navController.navigate(SuccessRoute)}
+                            onAddCardClick = { cardName ->
+                                navController.navigate(AddCardRoute(cardName))
+                            },
+                            onConfirmClick = {navController.navigate(SuccessRoute)},
+                            cartScreenViewModel = cartScreenViewModel
                         )
                     }
-                    composable<AddCardRoute>{
+                    composable<AddCardRoute>{ backStackEntity ->
+                        val route: AddCardRoute = backStackEntity.toRoute()
+                        val cardName = route.cardName
                         val cartScreenViewModel: CartScreenViewModel = koinViewModel()
                         AddCardScreen(
+                            nameCard = cardName,
                             onBackClick = {navController.popBackStack()},
                             cartScreenViewModel = cartScreenViewModel,
                             onAddClick = {navController.navigate(SuccessRoute)}

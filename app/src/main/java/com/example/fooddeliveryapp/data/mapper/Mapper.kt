@@ -1,9 +1,12 @@
 package com.example.fooddeliveryapp.data.mapper
 
+import com.example.fooddeliveryapp.data.local.entity.CardDataEntity
 import com.example.fooddeliveryapp.data.local.entity.CartFoodEntity
 import com.example.fooddeliveryapp.data.local.entity.FavoriteFoodEntity
+import com.example.fooddeliveryapp.domain.model.CardDataModel
 import com.example.fooddeliveryapp.domain.model.CartFoodModel
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
+
 
 fun FoodDataModel.toEntity(): FavoriteFoodEntity{
     return FavoriteFoodEntity(
@@ -41,5 +44,28 @@ fun CartFoodEntity.toModel(): CartFoodModel{
         price = this.price,
         image = this.image,
         quantity = this.quantity
+    )
+}
+
+fun CardDataEntity.toModel(): CardDataModel{
+    return CardDataModel(
+        id = this.id,
+        cardName = this.cardName,
+        holderName =  this.holderName,
+        cardNumber = this.cardNumber,
+        dateCard = this.dateCard,
+        CVC = this.CVC
+
+    )
+}
+
+fun CardDataModel.toEntity(): CardDataEntity{
+    return CardDataEntity(
+        id = this.id,
+        cardName = this.cardName,
+        holderName =  this.holderName,
+        cardNumber = this.cardNumber,
+        dateCard = this.dateCard,
+        CVC = this.CVC
     )
 }

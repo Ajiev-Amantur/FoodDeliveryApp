@@ -22,31 +22,37 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.R
+import com.example.fooddeliveryapp.presentation.cartScreen.viewModel.CartScreenViewModel
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
 
 @Composable
 fun PaymentScreen(
     onBackClick: () -> Unit,
-    onAddCardClick: () -> Unit,
-    onConfirmClick: () -> Unit
+    onAddCardClick: (name: String) -> Unit,
+    onConfirmClick: () -> Unit,
+    cartScreenViewModel: CartScreenViewModel
 ) {
     var selectedMethod by remember { mutableStateOf("Mastercard") }
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
-
+    val totalFoodPrice = cartScreenViewModel.totalPrice
+    val cardsData = cartScreenViewModel.cardsData.collectAsState()
     val paymentMethods = listOf(
         Pair("Cash", R.drawable.ic_cash),
         Pair("Visa", R.drawable.ic_visa),
         Pair("Mastercard", R.drawable.ic_mastercard),
         Pair("PayPal", R.drawable.ic_paypal)
     )
+    LaunchedEffect(Unit) {
+        cartScreenViewModel.loadCardsUserData()
+    }
 
     Scaffold(
         containerColor = Color.Black,
         topBar = {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth().statusBarsPadding()
                     .padding(horizontal = 20.dp, vertical = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -84,7 +90,12 @@ fun PaymentScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("TOTAL:", color = Color.Gray, fontSize = 14.sp)
-                    Text("$96", color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        "${totalFoodPrice.value}",
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 Box(
@@ -113,7 +124,7 @@ fun PaymentScreen(
                 .padding(horizontal = 20.dp)
         ) {
             Spacer(modifier = Modifier.height(10.dp))
-            
+
             // Список способов оплаты
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -129,72 +140,103 @@ fun PaymentScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
 
-            // Визуализация карты (как на скриншоте)
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(Color(0xFF1A1A1A), RoundedCornerShape(20.dp))
-                    .border(1.dp, Color.Gray.copy(alpha = 0.1f), RoundedCornerShape(20.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                if (selectedMethod == "Mastercard" || selectedMethod == "Visa") {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        // Здесь можно нарисовать саму карту
-                        Box(
-                            modifier = Modifier
-                                .size(120.dp, 80.dp)
-                                .background(
-                                    Brush.linearGradient(listOf(Color(0xFFFE724C), Color(0xFFFFC529))),
-                                    RoundedCornerShape(10.dp)
-                                )
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
-                        Text(
-                            text = "No card added",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "You can add a card and save it for later",
-                            color = Color.Gray,
-                            fontSize = 12.sp,
-                            modifier = Modifier.padding(horizontal = 40.dp)
-                        )
-                    }
-                } else if (selectedMethod == "Cash") {
-                    Text("Pay with cash on delivery", color = Color.White)
-                } else {
-                    Text("Connect your PayPal account", color = Color.White)
-                }
+        Spacer(modifier = Modifier.height(30.dp))
+        if (selectedMethod == "Visa" || selectedMethod == "Mastercard") {
+            val selectedCardData = cardsData.value.findLast { card ->
+                card.cardName == selectedMethod
             }
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            // Кнопка добавления новой карты
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onAddCardClick() },
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                    tint = Color(0xFFFE724C),
-                    modifier = Modifier.size(20.dp)
+            if (selectedCardData != null) {
+                CardItem(
+                    image = if (selectedMethod == "Visa")
+                        R.drawable.ic_visa else R.drawable.ic_mastercard,
+                    cardNumber = selectedCardData.cardNumber,
+                    cardName = selectedCardData.cardName
                 )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "ADD NEW",
-                    color = Color(0xFFFE724C),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
+            } else {
+                NoCardScreen(
+                    onAddCardClick,
+                    selectedMethod
                 )
             }
+
+        } else if (selectedMethod == "Cash") {
+            Text("Pay with cash on delivery", color = Color.White)
+        } else {
+            Text("Connect your PayPal account", color = Color.White)
         }
     }
 }
+}
+    @Composable
+    fun NoCardScreen(
+        onAddCardClick: (name: String) -> Unit,
+        selectedCard: String
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .background(Color(0xFF1A1A1A), RoundedCornerShape(20.dp))
+                .border(1.dp, Color.Gray.copy(alpha = 0.1f), RoundedCornerShape(20.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Box(
+                    modifier = Modifier
+                        .size(120.dp, 80.dp)
+                        .background(
+                            Brush.linearGradient(
+                                listOf(
+                                    Color(0xFFFE724C),
+                                    Color(0xFFFFC529)
+                                )
+                            ),
+                            RoundedCornerShape(10.dp)
+                        )
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = "No card added",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "You can add a card and save it for later",
+                    color = Color.Gray,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(horizontal = 40.dp)
+                )
+                Spacer(modifier = Modifier.height(30.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onAddCardClick(selectedCard)
+                        },
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
+                        tint = Color(0xFFFE724C),
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "ADD NEW",
+                        color = Color(0xFFFE724C),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
+                }
+            }
+        }
+    }
+
+
+
+
+
+
