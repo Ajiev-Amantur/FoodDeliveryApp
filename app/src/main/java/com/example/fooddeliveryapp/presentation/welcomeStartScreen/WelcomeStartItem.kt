@@ -31,6 +31,7 @@ import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.example.fooddeliveryapp.ui.theme.DarkBackground
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
 
@@ -49,7 +50,7 @@ fun WelcomeStartScreenItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(DarkBackground)
             .padding(horizontal = 24.dp, vertical = 24.dp)
     ) {
         val progress = animateLottieCompositionAsState(
@@ -62,7 +63,7 @@ fun WelcomeStartScreenItem(
 
         LottieAnimation(
             composition = lottieAnim,
-            progress = progress.value,
+            progress = { progress.value },
             modifier = Modifier.size(280.dp)
         )
 

@@ -8,6 +8,11 @@ object OnboardingRoute
 object WelcomeRoute
 
 @Serializable
+object LoginRoute
+@Serializable
+object SignUpRoute
+
+@Serializable
 object HomeRoute
 
 @Serializable

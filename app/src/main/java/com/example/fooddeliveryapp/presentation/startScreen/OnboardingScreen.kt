@@ -3,6 +3,7 @@ package com.example.fooddeliveryapp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,7 +36,10 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 import com.example.fooddeliveryapp.ui.theme.MainPink
 
 @Composable
-fun OnboardingScreen(onLoginClick: () -> Unit) {
+fun OnboardingScreen(
+    onLoginClick: () -> Unit,
+    onSignUpClick: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -122,6 +126,9 @@ fun OnboardingScreen(onLoginClick: () -> Unit) {
                 border = null
             ) {
                 Text(
+                    modifier =Modifier.clickable{
+                        onSignUpClick()
+                    },
                     text = "Signup",
                     color = MainPink,
                     fontSize = 16.sp,
