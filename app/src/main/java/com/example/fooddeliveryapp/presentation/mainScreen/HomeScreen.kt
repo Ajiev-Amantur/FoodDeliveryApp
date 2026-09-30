@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
@@ -106,6 +107,8 @@ fun HomeScreenUI(
                         append("Amazing")
                     },
                     fontSize = 30.sp,
+                    lineHeight = 36.sp,
+                    fontStyle = FontStyle.Italic,
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     modifier = Modifier

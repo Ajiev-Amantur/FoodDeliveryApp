@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 object OnboardingRoute
+@Serializable
+object WelcomeRoute
 
 @Serializable
 object HomeRoute
@@ -28,3 +30,6 @@ data class DetailRoute(
     val description: String,
     val isFavorite: Boolean
 )
+
+@Serializable
+object SucsessCardAdded

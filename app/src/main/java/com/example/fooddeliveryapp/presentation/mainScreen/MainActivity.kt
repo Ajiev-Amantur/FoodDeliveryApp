@@ -17,12 +17,15 @@ import com.example.fooddeliveryapp.OnboardingScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.AddCardScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.CartScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.PaymentScreen
+import com.example.fooddeliveryapp.presentation.cartScreen.SucsessAddedCard
 import com.example.fooddeliveryapp.presentation.cartScreen.viewModel.CartScreenViewModel
 import com.example.fooddeliveryapp.presentation.detailsScreen.FoodDetailsScreen
 import com.example.fooddeliveryapp.presentation.detailsScreen.viewmodel.DetailScreenViewModel
 import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.HomeViewModel
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.SavedFoodScreen
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.viewmodel.SavedFoodViewModel
+import com.example.fooddeliveryapp.presentation.startScreen.OnBoardingPref
+import com.example.fooddeliveryapp.presentation.welcomeStartScreen.WelcomeStartScreen
 import com.example.fooddeliveryapp.ui.theme.FoodDeliveryAppTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -30,6 +33,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val onBoardingPref = OnBoardingPref(this)
+        val startDestination = if (onBoardingPref.onBoardingCompleted()) {
+            OnboardingRoute
+        } else {
+            WelcomeRoute
+        }
+
         setContent {
             FoodDeliveryAppTheme {
                 val navController = rememberNavController()
@@ -42,12 +53,24 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = OnboardingRoute
+                    startDestination = startDestination
                 ) {
+                    composable<WelcomeRoute> {
+                        WelcomeStartScreen(
+                            onFinishClick = {
+                                onBoardingPref.setOnBoardingCompleted()
+                                navController.navigate(OnboardingRoute) {
+                                    popUpTo(WelcomeRoute) { inclusive = true }
+                                }
+                            }
+                        )
+                    }
                     composable<OnboardingRoute> {
                         OnboardingScreen(
                             onLoginClick = {
-                                navController.navigate(HomeRoute)
+                                navController.navigate(HomeRoute) {
+                                    popUpTo(OnboardingRoute) { inclusive = true }
+                                }
                             }
                         )
                     }
@@ -127,7 +150,7 @@ class MainActivity : ComponentActivity() {
                             nameCard = cardName,
                             onBackClick = {navController.popBackStack()},
                             cartScreenViewModel = cartScreenViewModel,
-                            onAddClick = {navController.navigate(SuccessRoute)}
+                            onAddClick = {navController.navigate(SucsessCardAdded)}
                         )
                     }
                     composable<SuccessRoute> {
@@ -137,6 +160,11 @@ class MainActivity : ComponentActivity() {
                                     popUpTo(HomeRoute) { inclusive = true }
                                 }
                             }
+                        )
+                    }
+                    composable<SucsessCardAdded>{
+                        SucsessAddedCard(
+                            onClick = {navController.navigate(PaymentRoute)}
                         )
                     }
                     composable<DetailRoute> { backStackEntry ->

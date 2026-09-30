@@ -47,7 +47,7 @@ fun OnboardingScreen(onLoginClick: () -> Unit) {
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.7f),
+                .fillMaxHeight(0.6f),
             contentScale = ContentScale.Crop
         )
 
@@ -56,18 +56,18 @@ fun OnboardingScreen(onLoginClick: () -> Unit) {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .fillMaxHeight(0.55f)
-                .clip(RoundedCornerShape(topStart = 120.dp))
+                .fillMaxHeight(0.52f)
+                .clip(RoundedCornerShape(topStart = 36.dp, topEnd = 36.dp))
                 .background(DarkBackground)
-                .padding(horizontal = 40.dp, vertical = 40.dp),
+                .padding(horizontal = 24.dp, vertical = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Delicious Food Waiting",
                 color = Color.White,
-                fontSize = 36.sp,
-                fontWeight = FontWeight.ExtraBold,
-                lineHeight = 44.sp,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                lineHeight = 38.sp,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -75,7 +75,7 @@ fun OnboardingScreen(onLoginClick: () -> Unit) {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "Lorem ipsum dolor sit amet consectetur elit. Nulla enim laborum, nam quasi error eius nihil iusto tenetur, nihil dicta sequi",
+                text = "Discover the best meals from local restaurants and top chefs, delivered fast to your doorstep.",
                 color = Color.White.copy(alpha = 0.8f),
                 fontSize = 14.sp,
                 lineHeight = 20.sp,
@@ -91,49 +91,45 @@ fun OnboardingScreen(onLoginClick: () -> Unit) {
             )
 
             Button(
-                onClick = {
-                    onLoginClick()
-                },
+                onClick = { onLoginClick() },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(64.dp)
-                    .background(gradient, shape = RoundedCornerShape(24.dp)),
+                    .height(54.dp)
+                    .background(gradient, shape = RoundedCornerShape(16.dp)),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(16.dp),
                 contentPadding = PaddingValues()
             ) {
                 Text(
                     text = "Login",
                     color = Color.White,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Signup Button Outlined
             OutlinedButton(
-                onClick = {
-                    onLoginClick()
-                },
+                onClick = { onLoginClick() },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(64.dp)
-                    .border(1.dp, Color(0xFF333333), RoundedCornerShape(24.dp)),
-                shape = RoundedCornerShape(24.dp),
+                    .height(54.dp)
+                    .border(1.dp, Color(0xFF333333), RoundedCornerShape(16.dp)),
+                shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = MainPink),
-                border = null // We use Modifier.border for custom color
+                border = null
             ) {
                 Text(
                     text = "Signup",
                     color = MainPink,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }
