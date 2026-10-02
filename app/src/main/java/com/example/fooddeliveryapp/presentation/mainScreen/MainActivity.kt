@@ -14,7 +14,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.fooddeliveryapp.HomeScreenUI
 import com.example.fooddeliveryapp.OnboardingScreen
+import com.example.fooddeliveryapp.presentation.LogInScreen.ForgotPasswordScreen
 import com.example.fooddeliveryapp.presentation.LogInScreen.LogInScreen
+import com.example.fooddeliveryapp.presentation.LogInScreen.VerificationScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.AddCardScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.CartScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.PaymentScreen
@@ -79,18 +81,34 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<LoginRoute> {
                         LogInScreen(
-                            onBackClick = {navController.popBackStack()},
-                            onLogInClick = {navController.navigate(HomeRoute)},
-                            onSignUpClick = {navController.navigate(SignUpRoute)},
-                            onForgotPasswordClick = {},
-                            onGoogleClick = {},
-                            onGuestClick = {navController.navigate(HomeRoute)}
+                            onBackClick = { navController.popBackStack() },
+                            onLogInClick = { navController.navigate(HomeRoute) },
+                            onSignUpClick = { navController.navigate(SignUpRoute) },
+                            onForgotPasswordClick = { navController.navigate(ForgotPasswordRoute) },
+                            onGoogleClick = { navController.navigate(HomeRoute) },
+                            onGuestClick = { navController.navigate(HomeRoute) }
                         )
                     }
-                    composable<SignUpRoute>{
+                    composable<SignUpRoute> {
                         SignUpScreen(
-                            onBackClick = {navController.popBackStack()},
-                            onSignUpClick = {navController.navigate(HomeRoute)}
+                            onBackClick = { navController.popBackStack() },
+                            onSignUpClick = { navController.navigate(HomeRoute) }
+                        )
+                    }
+                    composable<ForgotPasswordRoute> {
+                        ForgotPasswordScreen(
+                            onBackClick = { navController.popBackStack() },
+                            onResetPasswordClick = { navController.navigate(VerificationRoute) }
+                        )
+                    }
+                    composable<VerificationRoute> {
+                        VerificationScreen(
+                            onBackClick = { navController.popBackStack() },
+                            onVerifyClick = { code ->
+                                navController.navigate(HomeRoute) {
+                                    popUpTo(LoginRoute) { inclusive = true }
+                                }
+                            }
                         )
                     }
                     composable<HomeRoute> {

@@ -67,7 +67,6 @@ fun LogInScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
-
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
 
     Box(
