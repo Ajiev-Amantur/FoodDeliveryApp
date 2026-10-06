@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.fooddeliveryapp.HomeScreenUI
 import com.example.fooddeliveryapp.OnboardingScreen
+import com.example.fooddeliveryapp.presentation.LogInScreen.AuthManager
 import com.example.fooddeliveryapp.presentation.LogInScreen.ForgotPasswordScreen
 import com.example.fooddeliveryapp.presentation.LogInScreen.LogInScreen
 import com.example.fooddeliveryapp.presentation.LogInScreen.VerificationScreen
@@ -31,6 +34,7 @@ import com.example.fooddeliveryapp.presentation.signUpScreen.SignUpScreen
 import com.example.fooddeliveryapp.presentation.startScreen.OnBoardingPref
 import com.example.fooddeliveryapp.presentation.welcomeStartScreen.WelcomeStartScreen
 import com.example.fooddeliveryapp.ui.theme.FoodDeliveryAppTheme
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
@@ -80,12 +84,24 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable<LoginRoute> {
+                        val context = LocalContext.current
+                        val authManager = remember { AuthManager(context)}
+                        val coroutineScope = rememberCoroutineScope()
                         LogInScreen(
                             onBackClick = { navController.popBackStack() },
                             onLogInClick = { navController.navigate(HomeRoute) },
                             onSignUpClick = { navController.navigate(SignUpRoute) },
                             onForgotPasswordClick = { navController.navigate(ForgotPasswordRoute) },
-                            onGoogleClick = { navController.navigate(HomeRoute) },
+                            onGoogleClick = {
+                                coroutineScope.launch {
+                                    val sucsess = authManager.signInWithGoogle()
+                                    if (sucsess) {
+                                        navController.navigate(HomeRoute) {
+                                            popUpTo(LoginRoute) { inclusive = true }
+                                        }
+                                    }
+                                }
+                            },
                             onGuestClick = { navController.navigate(HomeRoute) }
                         )
                     }
@@ -98,7 +114,7 @@ class MainActivity : ComponentActivity() {
                     composable<ForgotPasswordRoute> {
                         ForgotPasswordScreen(
                             onBackClick = { navController.popBackStack() },
-                            onResetPasswordClick = { navController.navigate(VerificationRoute) }
+                            onSendCodeClick = { navController.navigate(VerificationRoute) }
                         )
                     }
                     composable<VerificationRoute> {
