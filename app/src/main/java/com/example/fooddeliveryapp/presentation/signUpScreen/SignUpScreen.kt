@@ -1,5 +1,7 @@
 package com.example.fooddeliveryapp.presentation.signUpScreen
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,13 +45,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.R
+import com.example.fooddeliveryapp.presentation.logInScreen.AuthManager
 import com.example.fooddeliveryapp.ui.theme.DarkBackground
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SignUpScreen(
+    context: Context,
     onBackClick: () -> Unit = {},
     onSignUpClick: () -> Unit = {}
 ) {
@@ -61,7 +64,7 @@ fun SignUpScreen(
 
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isReTypePasswordVisible by remember { mutableStateOf(false) }
-
+    val authManager = remember { AuthManager(context) }
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
 
     Box(
@@ -200,7 +203,18 @@ fun SignUpScreen(
 
                     // SIGN UP BUTTON
                     Button(
-                        onClick = onSignUpClick,
+                        onClick = {
+                            authManager.signUpWithEmail(
+                                email,
+                                password,
+                                onSuccess = {
+                                    onSignUpClick()
+                                },
+                                onError = {error ->
+                                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                                }
+                            )
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(52.dp)

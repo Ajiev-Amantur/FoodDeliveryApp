@@ -16,10 +16,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.fooddeliveryapp.HomeScreenUI
 import com.example.fooddeliveryapp.OnboardingScreen
-import com.example.fooddeliveryapp.presentation.LogInScreen.AuthManager
-import com.example.fooddeliveryapp.presentation.LogInScreen.ForgotPasswordScreen
-import com.example.fooddeliveryapp.presentation.LogInScreen.LogInScreen
-import com.example.fooddeliveryapp.presentation.LogInScreen.VerificationScreen
+import com.example.fooddeliveryapp.presentation.logInScreen.AuthManager
+import com.example.fooddeliveryapp.presentation.logInScreen.ForgotPasswordScreen
+import com.example.fooddeliveryapp.presentation.logInScreen.LogInScreen
+import com.example.fooddeliveryapp.presentation.logInScreen.VerificationScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.AddCardScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.CartScreen
 import com.example.fooddeliveryapp.presentation.cartScreen.PaymentScreen
@@ -88,6 +88,7 @@ class MainActivity : ComponentActivity() {
                         val authManager = remember { AuthManager(context)}
                         val coroutineScope = rememberCoroutineScope()
                         LogInScreen(
+                            context,
                             onBackClick = { navController.popBackStack() },
                             onLogInClick = { navController.navigate(HomeRoute) },
                             onSignUpClick = { navController.navigate(SignUpRoute) },
@@ -106,7 +107,10 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable<SignUpRoute> {
+                        val context = LocalContext.current
+
                         SignUpScreen(
+                            context = context,
                             onBackClick = { navController.popBackStack() },
                             onSignUpClick = { navController.navigate(HomeRoute) }
                         )

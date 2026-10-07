@@ -1,5 +1,7 @@
-package com.example.fooddeliveryapp.presentation.LogInScreen
+package com.example.fooddeliveryapp.presentation.logInScreen
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,6 +60,7 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LogInScreen(
+    context: Context,
     onBackClick: () -> Unit = {},
     onLogInClick: () -> Unit = {},
     onSignUpClick: () -> Unit = {},
@@ -68,7 +72,7 @@ fun LogInScreen(
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
-
+    val authManager = remember { AuthManager(context) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -193,7 +197,16 @@ fun LogInScreen(
 
                     // LOG IN BUTTON
                     Button(
-                        onClick = onLogInClick,
+                        onClick = {
+                            authManager.signInWithEmail(
+                                email,
+                                password,
+                                onSuccess = { onLogInClick() },
+                                onError = { error ->
+                                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                                }
+                            )
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(52.dp)
