@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.R
 import com.example.fooddeliveryapp.presentation.logInScreen.AuthManager
+import com.example.fooddeliveryapp.presentation.signUpScreen.viewmodel.SignUpViewModel
 import com.example.fooddeliveryapp.ui.theme.DarkBackground
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
@@ -53,6 +54,7 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 @Composable
 fun SignUpScreen(
     context: Context,
+    signUpViewModel: SignUpViewModel,
     onBackClick: () -> Unit = {},
     onSignUpClick: () -> Unit = {}
 ) {
@@ -64,7 +66,6 @@ fun SignUpScreen(
 
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isReTypePasswordVisible by remember { mutableStateOf(false) }
-    val authManager = remember { AuthManager(context) }
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
 
     Box(
@@ -204,16 +205,16 @@ fun SignUpScreen(
                     // SIGN UP BUTTON
                     Button(
                         onClick = {
-                            authManager.signUpWithEmail(
+                            signUpViewModel.signUpWithEmail(
                                 email,
-                                password,
-                                onSuccess = {
+                                password
+                            ){isSucsess->
+                                if (isSucsess){
                                     onSignUpClick()
-                                },
-                                onError = {error ->
-                                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                                }else{
+                                    Toast.makeText(context, "Error in Auth", Toast.LENGTH_SHORT).show()
                                 }
-                            )
+                            }
                         },
                         modifier = Modifier
                             .fillMaxWidth()

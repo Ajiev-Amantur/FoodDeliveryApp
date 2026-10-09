@@ -27,10 +27,12 @@ import com.example.fooddeliveryapp.presentation.cartScreen.SucsessAddedCard
 import com.example.fooddeliveryapp.presentation.cartScreen.viewModel.CartScreenViewModel
 import com.example.fooddeliveryapp.presentation.detailsScreen.FoodDetailsScreen
 import com.example.fooddeliveryapp.presentation.detailsScreen.viewmodel.DetailScreenViewModel
+import com.example.fooddeliveryapp.presentation.logInScreen.viewmodel.LogInViewModel
 import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.HomeViewModel
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.SavedFoodScreen
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.viewmodel.SavedFoodViewModel
 import com.example.fooddeliveryapp.presentation.signUpScreen.SignUpScreen
+import com.example.fooddeliveryapp.presentation.signUpScreen.viewmodel.SignUpViewModel
 import com.example.fooddeliveryapp.presentation.startScreen.OnBoardingPref
 import com.example.fooddeliveryapp.presentation.welcomeStartScreen.WelcomeStartScreen
 import com.example.fooddeliveryapp.ui.theme.FoodDeliveryAppTheme
@@ -85,10 +87,13 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<LoginRoute> {
                         val context = LocalContext.current
-                        val authManager = remember { AuthManager(context)}
+                        val authManager = remember { AuthManager(context) }
                         val coroutineScope = rememberCoroutineScope()
+                        val logInViewModel: LogInViewModel = koinViewModel()
+
                         LogInScreen(
                             context,
+                            logInViewModel,
                             onBackClick = { navController.popBackStack() },
                             onLogInClick = { navController.navigate(HomeRoute) },
                             onSignUpClick = { navController.navigate(SignUpRoute) },
@@ -108,9 +113,10 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<SignUpRoute> {
                         val context = LocalContext.current
-
+                        val singUpViewModel: SignUpViewModel = koinViewModel()
                         SignUpScreen(
-                            context = context,
+                            context,
+                            singUpViewModel,
                             onBackClick = { navController.popBackStack() },
                             onSignUpClick = { navController.navigate(HomeRoute) }
                         )

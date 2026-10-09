@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,14 +54,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.R
 import com.example.fooddeliveryapp.R.drawable.ic_food_fon
+import com.example.fooddeliveryapp.presentation.logInScreen.viewmodel.LogInViewModel
 import com.example.fooddeliveryapp.ui.theme.DarkBackground
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LogInScreen(
     context: Context,
+    logInViewModel: LogInViewModel,
     onBackClick: () -> Unit = {},
     onLogInClick: () -> Unit = {},
     onSignUpClick: () -> Unit = {},
@@ -72,7 +74,7 @@ fun LogInScreen(
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
-    val authManager = remember { AuthManager(context) }
+    var isLoading by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -198,14 +200,19 @@ fun LogInScreen(
                     // LOG IN BUTTON
                     Button(
                         onClick = {
-                            authManager.signInWithEmail(
+                            isLoading = true
+                            logInViewModel.signInViewModel(
                                 email,
                                 password,
-                                onSuccess = { onLogInClick() },
-                                onError = { error ->
-                                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                            ){isSucsess ->
+                                isLoading = false
+                                if (isSucsess){
+                                    onLogInClick()
+                                }else{
+                                    Toast.makeText(context, "Error in Auth", Toast.LENGTH_SHORT).show()
                                 }
-                            )
+
+                            }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -216,14 +223,21 @@ fun LogInScreen(
                             containerColor = Color.Transparent
                         )
                     ) {
-                        Text(
-                            text = "LOG IN",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
+                        if (isLoading) {
+                            CircularProgressIndicator(
+                                color = Color.White,
+                                modifier = Modifier.size(24.dp),
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Text(
+                                text = "LOG IN",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // SIGN UP LINK
