@@ -82,5 +82,8 @@ dependencies {
 
     // Lottie для Jetpack Compose
     implementation(libs.lottie.compose)
+
+    //coil
+    implementation(libs.coil.compose)
 }
 

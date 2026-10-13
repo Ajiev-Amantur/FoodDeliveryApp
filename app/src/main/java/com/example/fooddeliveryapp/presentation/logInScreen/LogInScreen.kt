@@ -50,8 +50,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.koin.androidx.compose.koinViewModel
 import com.example.fooddeliveryapp.R
 import com.example.fooddeliveryapp.R.drawable.ic_food_fon
 import com.example.fooddeliveryapp.presentation.logInScreen.viewmodel.LogInViewModel
@@ -61,8 +63,7 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 
 @Composable
 fun LogInScreen(
-    context: Context,
-    logInViewModel: LogInViewModel,
+    logInViewModel: LogInViewModel = koinViewModel(),
     onBackClick: () -> Unit = {},
     onLogInClick: () -> Unit = {},
     onSignUpClick: () -> Unit = {},
@@ -70,6 +71,7 @@ fun LogInScreen(
     onGoogleClick: () -> Unit = {},
     onGuestClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }

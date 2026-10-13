@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import com.example.fooddeliveryapp.domain.model.UserDataModel
 import com.example.fooddeliveryapp.domain.repository.AuthRepository
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
@@ -70,6 +71,15 @@ class AuthRepositoryImpl(private val context: Context): AuthRepository {
             e.printStackTrace()
             false
         }
+    }
+
+    override fun getUserData(): UserDataModel? {
+       val fireBaseUser = firebaseAuth.currentUser?: return null
+        return UserDataModel(
+            name = fireBaseUser.displayName?: "Food Lover",
+            email = fireBaseUser.email?: "",
+            photoUrl = fireBaseUser.photoUrl?.toString()?: ""
+        )
     }
 
 }

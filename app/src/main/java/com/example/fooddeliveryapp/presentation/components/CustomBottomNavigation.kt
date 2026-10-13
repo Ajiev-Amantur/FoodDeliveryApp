@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -17,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.fooddeliveryapp.R
@@ -28,16 +31,18 @@ fun CustomBottomNavigation(
     onHomeClick: () -> Unit = {},
     onFavoriteClick: () -> Unit = {},
     onCartClick: () -> Unit = {},
+    onProfileClick: () -> Unit = {},
     isSelectedHome: Boolean = false,
     isSelectedSaved: Boolean = false,
     isSelectedCart: Boolean = false,
+    isSelectedProfile: Boolean = false
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(90.dp)
             .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-            .background(Color(0xFF1A1A1A)) // Темно-серый фон бара
+            .background(Color(0xFF1A1A1A))
             .padding(horizontal = 30.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -57,17 +62,14 @@ fun CustomBottomNavigation(
                 isSelected = isSelectedSaved
             )
             BottomIcon(
-                iconRes = R.drawable.search,
-                onClick = {}
-            )
-            BottomIcon(
-                iconRes = R.drawable.ic_notification,
-                onClick = {}
-            )
-            BottomIcon(
                 iconRes = R.drawable.trolly_25,
                 onClick = onCartClick,
                 isSelected = isSelectedCart
+            )
+            BottomIconVector(
+                imageVector = Icons.Default.Person,
+                onClick = onProfileClick,
+                isSelected = isSelectedProfile
             )
         }
     }
@@ -95,7 +97,36 @@ fun BottomIcon(
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
-                tint = if (isSelected) Color.White else Color.Gray, // Изменили Red на Gray для неактивных иконок
+                tint = if (isSelected) Color.White else Color.Gray,
+                modifier = Modifier.size(28.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomIconVector(
+    imageVector: ImageVector,
+    onClick: () -> Unit = {},
+    isSelected: Boolean = false
+) {
+    val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
+
+    Box(
+        modifier = Modifier
+            .size(50.dp)
+            .background(
+                if (isSelected) gradient else
+                    Brush.linearGradient(listOf(Color.Transparent, Color.Transparent)),
+                RoundedCornerShape(15.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        IconButton(onClick = onClick) {
+            Icon(
+                imageVector = imageVector,
+                contentDescription = null,
+                tint = if (isSelected) Color.White else Color.Gray,
                 modifier = Modifier.size(28.dp)
             )
         }

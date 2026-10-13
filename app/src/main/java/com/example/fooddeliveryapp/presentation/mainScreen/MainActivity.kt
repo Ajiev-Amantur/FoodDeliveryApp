@@ -4,9 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
@@ -29,13 +34,17 @@ import com.example.fooddeliveryapp.presentation.detailsScreen.FoodDetailsScreen
 import com.example.fooddeliveryapp.presentation.detailsScreen.viewmodel.DetailScreenViewModel
 import com.example.fooddeliveryapp.presentation.logInScreen.viewmodel.LogInViewModel
 import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.HomeViewModel
+import com.example.fooddeliveryapp.presentation.profileScreen.ProfileScreen
+import com.example.fooddeliveryapp.presentation.profileScreen.viewmodel.ProfileViewModel
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.SavedFoodScreen
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.viewmodel.SavedFoodViewModel
 import com.example.fooddeliveryapp.presentation.signUpScreen.SignUpScreen
 import com.example.fooddeliveryapp.presentation.signUpScreen.viewmodel.SignUpViewModel
 import com.example.fooddeliveryapp.presentation.startScreen.OnBoardingPref
 import com.example.fooddeliveryapp.presentation.welcomeStartScreen.WelcomeStartScreen
+import com.example.fooddeliveryapp.ui.theme.DarkBackground
 import com.example.fooddeliveryapp.ui.theme.FoodDeliveryAppTheme
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -62,8 +71,13 @@ class MainActivity : ComponentActivity() {
                 val isSelectedSavedScreen = currentDestination?.hasRoute<SavedFoodRoute>() == true
 
                 NavHost(
+                    modifier = Modifier.background(DarkBackground),
                     navController = navController,
-                    startDestination = startDestination
+                    startDestination = startDestination,
+                    enterTransition = { fadeIn(animationSpec = tween(250)) },
+                    exitTransition = { fadeOut(animationSpec = tween(250)) },
+                    popEnterTransition = { fadeIn(animationSpec = tween(250)) },
+                    popExitTransition = { fadeOut(animationSpec = tween(250)) }
                 ) {
                     composable<WelcomeRoute> {
                         WelcomeStartScreen(
@@ -86,22 +100,17 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable<LoginRoute> {
-                        val context = LocalContext.current
-                        val authManager = remember { AuthManager(context) }
-                        val coroutineScope = rememberCoroutineScope()
                         val logInViewModel: LogInViewModel = koinViewModel()
 
                         LogInScreen(
-                            context,
-                            logInViewModel,
+                            logInViewModel = logInViewModel,
                             onBackClick = { navController.popBackStack() },
                             onLogInClick = { navController.navigate(HomeRoute) },
                             onSignUpClick = { navController.navigate(SignUpRoute) },
                             onForgotPasswordClick = { navController.navigate(ForgotPasswordRoute) },
                             onGoogleClick = {
-                                coroutineScope.launch {
-                                    val sucsess = authManager.signInWithGoogle()
-                                    if (sucsess) {
+                                logInViewModel.signInViewModel("", "") { isSuccess ->
+                                    if (isSuccess) {
                                         navController.navigate(HomeRoute) {
                                             popUpTo(LoginRoute) { inclusive = true }
                                         }
@@ -112,11 +121,9 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable<SignUpRoute> {
-                        val context = LocalContext.current
-                        val singUpViewModel: SignUpViewModel = koinViewModel()
+                        val signUpViewModel: SignUpViewModel = koinViewModel()
                         SignUpScreen(
-                            context,
-                            singUpViewModel,
+                            signUpViewModel = signUpViewModel,
                             onBackClick = { navController.popBackStack() },
                             onSignUpClick = { navController.navigate(HomeRoute) }
                         )
@@ -228,6 +235,29 @@ class MainActivity : ComponentActivity() {
                     composable<SucsessCardAdded>{
                         SucsessAddedCard(
                             onClick = {navController.navigate(PaymentRoute)}
+                        )
+                    }
+                    composable<ProfileRoute> {
+                        val isSelectedProfileScreen = currentDestination?.hasRoute<ProfileRoute>() == true
+                        val auth = remember { FirebaseAuth.getInstance() }
+                        val profileViewModel: ProfileViewModel = koinViewModel()
+                        ProfileScreen(
+                            profileViewModel,
+                            isSelectedHome = isSelectedHomeScreen,
+                            isSelectedSaved = isSelectedSavedScreen,
+                            isSelectedCart = isSelectedCartScreen,
+                            isSelectedProfile = isSelectedProfileScreen,
+                            onBackClick = { navController.popBackStack() },
+                            onHomeClick = { navController.navigate(HomeRoute) },
+                            onFavoriteClick = { navController.navigate(SavedFoodRoute) },
+                            onCartClick = { navController.navigate(CartRoute) },
+                            onPaymentMethodsClick = { navController.navigate(PaymentRoute) },
+                            onLogOutClick = {
+                                auth.signOut()
+                                navController.navigate(OnboardingRoute) {
+                                    popUpTo(HomeRoute) { inclusive = true }
+                                }
+                            }
                         )
                     }
                     composable<DetailRoute> { backStackEntry ->

@@ -26,6 +26,9 @@ object SavedFoodRoute
 object CartRoute
 
 @Serializable
+object ProfileRoute
+
+@Serializable
 object PaymentRoute
 @Serializable
 data class AddCardRoute(val cardName: String)

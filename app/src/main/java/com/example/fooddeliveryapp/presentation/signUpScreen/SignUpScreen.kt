@@ -51,13 +51,16 @@ import com.example.fooddeliveryapp.ui.theme.DarkBackground
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
 
+import androidx.compose.ui.platform.LocalContext
+import org.koin.androidx.compose.koinViewModel
+
 @Composable
 fun SignUpScreen(
-    context: Context,
-    signUpViewModel: SignUpViewModel,
+    signUpViewModel: SignUpViewModel = koinViewModel(),
     onBackClick: () -> Unit = {},
     onSignUpClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     // Состояния для введенных данных
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
