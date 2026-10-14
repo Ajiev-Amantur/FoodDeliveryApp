@@ -6,6 +6,7 @@ interface AuthRepository {
     suspend fun signInWithGoogle(): Boolean
     suspend fun signInWithEmail(email: String, password: String): Boolean
     suspend fun signUpWithEmail(email: String, password: String): Boolean
-    fun getUserData(): UserDataModel?
+    suspend fun saveUserData(userDataModel: UserDataModel)
+    suspend fun getUserData(): UserDataModel?
 
 }

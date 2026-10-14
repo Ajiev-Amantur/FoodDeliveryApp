@@ -39,6 +39,7 @@ fun SavedFoodScreen(
     onFavoriteClick: () -> Unit,
     onCartClick: () -> Unit,
     onHomeClick: () -> Unit,
+    onProfileClick: () -> Unit = {},
     onBackClick: () -> Unit
 ) {
     val favoriteFoodList by savedFoodViewModel.favoriteFood.collectAsState()
@@ -48,6 +49,7 @@ fun SavedFoodScreen(
             CustomBottomNavigation(
                 onFavoriteClick = { onFavoriteClick() },
                 onCartClick = { onCartClick() },
+                onProfileClick = { onProfileClick() },
                 isSelectedHome = isSelectedHome,
                 onHomeClick = { onHomeClick() },
                 isSelectedSaved = isSelectedSaved,

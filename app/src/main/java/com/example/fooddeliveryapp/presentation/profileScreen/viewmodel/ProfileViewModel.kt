@@ -1,19 +1,30 @@
 package com.example.fooddeliveryapp.presentation.profileScreen.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.fooddeliveryapp.domain.model.UserDataModel
 import com.example.fooddeliveryapp.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val authRepository: AuthRepository
 ): ViewModel() {
 
+    init {
+        getUserData()
+    }
     private var _userData = MutableStateFlow<UserDataModel?>(null)
     val userData: MutableStateFlow<UserDataModel?> = _userData
     fun getUserData(){
-       val userData = authRepository.getUserData()
-
-        _userData.value = userData
+        viewModelScope.launch {
+            try {
+                val userData = authRepository.getUserData()
+                _userData.value = userData
+            } catch (e: Exception) {
+                println("ProfileViewModel Error: ${e.message}")
+                e.printStackTrace()
+            }
+        }
     }
 }

@@ -52,6 +52,7 @@ import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
 
 import androidx.compose.ui.platform.LocalContext
+import com.example.fooddeliveryapp.domain.model.UserDataModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -208,6 +209,13 @@ fun SignUpScreen(
                     // SIGN UP BUTTON
                     Button(
                         onClick = {
+                            signUpViewModel.saveUserData(
+                              UserDataModel(
+                                  name = name,
+                                  email = email,
+                                  photoUrl = null
+                              )
+                            )
                             signUpViewModel.signUpWithEmail(
                                 email,
                                 password

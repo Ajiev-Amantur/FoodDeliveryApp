@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -147,6 +148,7 @@ class MainActivity : ComponentActivity() {
                     composable<HomeRoute> {
                         val homeViewModel: HomeViewModel = koinViewModel()
                         HomeScreenUI(
+                            onProfileClick = { navController.navigate(ProfileRoute) },
                             isSelectedHome = isSelectedHomeScreen,
                             isSelectedSaved = isSelectedSavedScreen,
                             isSelectedCart = isSelectedCartScreen,
@@ -173,6 +175,7 @@ class MainActivity : ComponentActivity() {
                             isSelectedSaved = isSelectedSavedScreen,
                             isSelectedCart = isSelectedCartScreen,
                             savedFoodViewModel = savedViewModel,
+                            onProfileClick = { navController.navigate(ProfileRoute) },
                             onFoodClick = { foodItem ->
                                 navController.navigate(
                                     DetailRoute(
@@ -241,8 +244,12 @@ class MainActivity : ComponentActivity() {
                         val isSelectedProfileScreen = currentDestination?.hasRoute<ProfileRoute>() == true
                         val auth = remember { FirebaseAuth.getInstance() }
                         val profileViewModel: ProfileViewModel = koinViewModel()
+                        val userDataState by profileViewModel.userData.collectAsState()
+
                         ProfileScreen(
-                            profileViewModel,
+                            userName = userDataState?.name ?: "User",
+                            userEmail = userDataState?.email ?: "user@fooddelivery.com",
+                            userPhotoUrl = userDataState?.photoUrl,
                             isSelectedHome = isSelectedHomeScreen,
                             isSelectedSaved = isSelectedSavedScreen,
                             isSelectedCart = isSelectedCartScreen,

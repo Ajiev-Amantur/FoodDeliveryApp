@@ -1,9 +1,11 @@
 package com.example.fooddeliveryapp.di
 
 import androidx.room.Room
+import com.example.fooddeliveryapp.data.local.dao.UserDataDao
 import com.example.fooddeliveryapp.data.local.database.CardDataDatabase
 import com.example.fooddeliveryapp.data.local.database.CartFoodDataBase
 import com.example.fooddeliveryapp.data.local.database.FavoriteFoodDataBase
+import com.example.fooddeliveryapp.data.local.database.UserDatabase
 import com.example.fooddeliveryapp.data.local.entity.CardDataEntity
 import com.example.fooddeliveryapp.data.repository.AuthRepositoryImpl
 import com.example.fooddeliveryapp.data.repository.FoodCartRepositoryImpl
@@ -19,6 +21,7 @@ import com.example.fooddeliveryapp.presentation.cartScreen.viewModel.CartScreenV
 import com.example.fooddeliveryapp.presentation.detailsScreen.viewmodel.DetailScreenViewModel
 import com.example.fooddeliveryapp.presentation.logInScreen.viewmodel.LogInViewModel
 import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.HomeViewModel
+import com.example.fooddeliveryapp.presentation.profileScreen.viewmodel.ProfileViewModel
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.viewmodel.SavedFoodViewModel
 import com.example.fooddeliveryapp.presentation.signUpScreen.viewmodel.SignUpViewModel
 import org.koin.android.ext.koin.androidContext
@@ -27,16 +30,16 @@ val appModule = module {
     // Репозитории
     single<GetFoodDataRepository> { GetFoodDataRepositoryImpl(get()) }
     single<CartFoodRepository> { FoodCartRepositoryImpl(get(), get()) }
-    single<AuthRepository>{ AuthRepositoryImpl(get()) }
+    single<AuthRepository>{ AuthRepositoryImpl(get(),get()) }
     // ViewModels
     viewModel { HomeViewModel(get(), FilterFoodByCategory()) }
     viewModel { SavedFoodViewModel(get(), GetFavoriteFoodUseCase()) }
-    viewModel { DetailScreenViewModel(get()) } // ДОБАВИЛИ
-    viewModel { CartScreenViewModel(get()) }   // ДОБАВИЛИ
+    viewModel { DetailScreenViewModel(get()) }
+    viewModel { CartScreenViewModel(get()) }
     viewModel { LogInViewModel(get()) }
     viewModel { SignUpViewModel(get()) }
+    viewModel { ProfileViewModel(get()) }
 
-    // Базы данных
     single {
         Room.databaseBuilder(
             androidContext(),
@@ -63,4 +66,13 @@ val appModule = module {
         ).build()
     }
     single { get<CardDataDatabase>().cartDataDao() }
+
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            UserDatabase::class.java,
+            "user_db"
+        ).build()
+    }
+    single{ get<UserDatabase>().dao()}
 }

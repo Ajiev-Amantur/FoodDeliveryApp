@@ -3,9 +3,11 @@ package com.example.fooddeliveryapp.data.mapper
 import com.example.fooddeliveryapp.data.local.entity.CardDataEntity
 import com.example.fooddeliveryapp.data.local.entity.CartFoodEntity
 import com.example.fooddeliveryapp.data.local.entity.FavoriteFoodEntity
+import com.example.fooddeliveryapp.data.local.entity.UserDataEntity
 import com.example.fooddeliveryapp.domain.model.CardDataModel
 import com.example.fooddeliveryapp.domain.model.CartFoodModel
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
+import com.example.fooddeliveryapp.domain.model.UserDataModel
 
 
 fun FoodDataModel.toEntity(): FavoriteFoodEntity{
@@ -67,5 +69,21 @@ fun CardDataModel.toEntity(): CardDataEntity{
         cardNumber = this.cardNumber,
         dateCard = this.dateCard,
         CVC = this.CVC
+    )
+}
+
+fun UserDataModel.toEntity(): UserDataEntity {
+    return UserDataEntity(
+        name = this.name,
+        email = this.email,
+        photoUrl = this.photoUrl
+    )
+}
+
+fun UserDataEntity.toModel(): UserDataModel{
+    return UserDataModel(
+        name = this.name,
+        email = this.email,
+        photoUrl = this.photoUrl
     )
 }

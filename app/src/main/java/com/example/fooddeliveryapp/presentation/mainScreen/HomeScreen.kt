@@ -40,6 +40,7 @@ import com.example.fooddeliveryapp.presentation.components.CustomBottomNavigatio
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenUI(
+    onProfileClick: () -> Unit,
     isSelectedHome: Boolean,
     isSelectedSaved: Boolean,
     isSelectedCart: Boolean,
@@ -58,6 +59,7 @@ fun HomeScreenUI(
             CustomBottomNavigation(
                 onFavoriteClick = onFavoriteNavClick,
                 onCartClick = onCartClick,
+                onProfileClick = onProfileClick,
                 isSelectedHome = isSelectedHome,
                 isSelectedSaved = isSelectedSaved,
                 isSelectedCart = isSelectedCart

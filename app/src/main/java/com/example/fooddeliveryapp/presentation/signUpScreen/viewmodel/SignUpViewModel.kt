@@ -2,11 +2,17 @@ package com.example.fooddeliveryapp.presentation.signUpScreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fooddeliveryapp.domain.model.UserDataModel
 import com.example.fooddeliveryapp.domain.repository.AuthRepository
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(private val authRepository: AuthRepository): ViewModel() {
 
+    fun saveUserData(userDataModel: UserDataModel){
+        viewModelScope.launch {
+            authRepository.saveUserData(userDataModel)
+        }
+    }
     fun signUpWithEmail(
         email: String,
         password: String,

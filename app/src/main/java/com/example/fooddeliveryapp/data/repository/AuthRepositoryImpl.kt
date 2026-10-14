@@ -5,6 +5,8 @@ import android.widget.Toast
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import com.example.fooddeliveryapp.data.local.dao.UserDataDao
+import com.example.fooddeliveryapp.data.mapper.toEntity
 import com.example.fooddeliveryapp.domain.model.UserDataModel
 import com.example.fooddeliveryapp.domain.repository.AuthRepository
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -15,7 +17,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.cancellation.CancellationException
 
-class AuthRepositoryImpl(private val context: Context): AuthRepository {
+class AuthRepositoryImpl(
+    private val context: Context,
+    private val dao: UserDataDao
+): AuthRepository {
     private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val credentialManager: CredentialManager by lazy { CredentialManager.create(context) }
     private val getGoogleIdOption: GetGoogleIdOption by lazy {
@@ -73,12 +78,20 @@ class AuthRepositoryImpl(private val context: Context): AuthRepository {
         }
     }
 
-    override fun getUserData(): UserDataModel? {
-       val fireBaseUser = firebaseAuth.currentUser?: return null
+    override suspend fun saveUserData(userDataModel: UserDataModel) {
+        dao.addUserData(userDataModel.toEntity())
+    }
+
+    override suspend fun getUserData(): UserDataModel? {
+        val fireBaseUser = firebaseAuth.currentUser
+        val userData = dao.getUserData()
+        
+        if (fireBaseUser == null && userData == null) return null
+
         return UserDataModel(
-            name = fireBaseUser.displayName?: "Food Lover",
-            email = fireBaseUser.email?: "",
-            photoUrl = fireBaseUser.photoUrl?.toString()?: ""
+            name = userData?.name ?: fireBaseUser?.displayName ?: "Food Lover",
+            email = userData?.email ?: fireBaseUser?.email ?: "",
+            photoUrl = userData?.photoUrl ?: fireBaseUser?.photoUrl?.toString()
         )
     }
 

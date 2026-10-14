@@ -59,7 +59,9 @@ import org.jetbrains.annotations.Async
 
 @Composable
 fun ProfileScreen(
-    profileViewModel: ProfileViewModel,
+    userName: String = "John Doe",
+    userEmail: String = "example@gmail.com",
+    userPhotoUrl: String? = null,
     isSelectedHome: Boolean = false,
     isSelectedSaved: Boolean = false,
     isSelectedCart: Boolean = false,
@@ -72,7 +74,7 @@ fun ProfileScreen(
     onLogOutClick: () -> Unit = {}
 ) {
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
-    var userData = remember{ profileViewModel.userData.value}
+
     Scaffold(
         bottomBar = {
             CustomBottomNavigation(
@@ -131,18 +133,30 @@ fun ProfileScreen(
                             .clip(CircleShape)
                             .background(Color.White)
                     ) {
-                        AsyncImage(
-                            model = userData?.name,
-                            contentDescription = "",
-                            modifier = Modifier.size(40.dp)
-                        )
+                        if (userPhotoUrl != null) {
+                            AsyncImage(
+                                model = userPhotoUrl,
+                                contentDescription = "User Avatar",
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Avatar",
+                                tint = Color(0xFFFF7622),
+                                modifier = Modifier.size(50.dp)
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
 
                     // Имя пользователя
                     Text(
-                        text = userData?.name?: "User",
+                        text = userName,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -152,7 +166,7 @@ fun ProfileScreen(
 
                     // Email пользователя
                     Text(
-                        text = userData?.email?: "your email",
+                        text = userEmail,
                         fontSize = 14.sp,
                         color = Color.White.copy(alpha = 0.8f)
                     )
@@ -305,4 +319,15 @@ fun ProfileMenuItem(
             )
         }
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ProfileScreenPreview() {
+    ProfileScreen(
+        userName = "John Doe",
+        userEmail = "example@gmail.com",
+        userPhotoUrl = null,
+        isSelectedProfile = true
+    )
 }
