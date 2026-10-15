@@ -14,7 +14,7 @@ object SignUpRoute
 @Serializable
 object ForgotPasswordRoute
 @Serializable
-object VerificationRoute
+data class VerificationRoute(val code: String,val email: String)
 
 @Serializable
 object HomeRoute

@@ -1,5 +1,6 @@
 package com.example.fooddeliveryapp.presentation.logInScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +38,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -47,16 +49,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.R
+import com.example.fooddeliveryapp.presentation.logInScreen.viewmodel.LogInViewModel
 import com.example.fooddeliveryapp.ui.theme.DarkBackground
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
 
+import org.koin.androidx.compose.koinViewModel
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun VerificationScreen(
+    code: String = "1234",
     userEmail: String = "example@gmail.com",
+    logInViewModel: LogInViewModel = koinViewModel(),
     onBackClick: () -> Unit = {},
-    onVerifyClick: (String) -> Unit = {},
+    onVerifyClick: () -> Unit = {},
     onResendClick: () -> Unit = {}
 ) {
     // Храним 4 цифры в списке
@@ -64,7 +71,7 @@ fun VerificationScreen(
 
     // Фокус-реквестеры для автоматического перехода на следующий квадратик
     val focusRequesters = remember { List(4) { FocusRequester() } }
-
+    val context = LocalContext.current
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
 
     Box(
@@ -213,10 +220,25 @@ fun VerificationScreen(
                     }
 
                     Spacer(modifier = Modifier.height(28.dp))
-
                     // КНОПКА VERIFY
                     Button(
-                        onClick = { onVerifyClick(otpCode.joinToString("")) },
+                        onClick = {
+                            // Склеиваем 4 введенные цифры из ячеек в одну строку
+                            val enteredCode = otpCode.joinToString("")
+
+                            // Сверяем введенный код с оригинальным кодом:
+                            if (enteredCode == code) {
+                                // Если код совпал — отправляем реальное письмо от Google:
+                               logInViewModel.resetPassword(userEmail) { isSuccess ->
+                                    if (isSuccess) {
+                                        Toast.makeText(context, "Код верный! Письмо отправлено.", Toast.LENGTH_LONG).show()
+                                        onVerifyClick() // Переходим на Вход
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(context, "Неверный код!", Toast.LENGTH_SHORT).show()
+                            }
+                                  },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(52.dp)

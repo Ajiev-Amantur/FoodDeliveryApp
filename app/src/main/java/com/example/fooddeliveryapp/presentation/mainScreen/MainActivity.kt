@@ -130,15 +130,22 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable<ForgotPasswordRoute> {
+                        val logInViewModel: LogInViewModel = koinViewModel()
                         ForgotPasswordScreen(
                             onBackClick = { navController.popBackStack() },
-                            onSendCodeClick = { navController.navigate(VerificationRoute) }
+                            onSendCodeClick = { code,email ->
+                                navController.navigate(VerificationRoute(code,email))
+                            },
+                            logInViewModel = logInViewModel
                         )
                     }
-                    composable<VerificationRoute> {
+                    composable<VerificationRoute> { backStackEntry ->
+                        val route: VerificationRoute = backStackEntry.toRoute()
                         VerificationScreen(
+                            code = route.code,
+                            userEmail = route.email,
                             onBackClick = { navController.popBackStack() },
-                            onVerifyClick = { code ->
+                            onVerifyClick = {
                                 navController.navigate(HomeRoute) {
                                     popUpTo(LoginRoute) { inclusive = true }
                                 }

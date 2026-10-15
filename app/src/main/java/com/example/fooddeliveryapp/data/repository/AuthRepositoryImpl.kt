@@ -82,6 +82,17 @@ class AuthRepositoryImpl(
         dao.addUserData(userDataModel.toEntity())
     }
 
+    override suspend fun resetPassword(email: String): Boolean {
+       return try {
+            firebaseAuth.sendPasswordResetEmail(email).await()
+            true
+        }catch (e: Exception){
+            if (e is CancellationException) throw e
+            e.printStackTrace()
+            false
+        }
+    }
+
     override suspend fun getUserData(): UserDataModel? {
         val fireBaseUser = firebaseAuth.currentUser
         val userData = dao.getUserData()

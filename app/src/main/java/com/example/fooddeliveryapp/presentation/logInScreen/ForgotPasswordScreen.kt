@@ -1,5 +1,7 @@
 package com.example.fooddeliveryapp.presentation.logInScreen
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,25 +35,29 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fooddeliveryapp.R
+import com.example.fooddeliveryapp.presentation.logInScreen.viewmodel.LogInViewModel
 import com.example.fooddeliveryapp.ui.theme.DarkBackground
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
+import org.koin.androidx.compose.koinViewModel
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ForgotPasswordScreen(
+    logInViewModel: LogInViewModel,
     onBackClick: () -> Unit = {},
-    onSendCodeClick: () -> Unit = {}
+    onSendCodeClick: (code: String, email: String) -> Unit = {_,_ ->}
 ) {
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
     var email by remember { mutableStateOf("") }
-
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -152,7 +158,24 @@ fun ForgotPasswordScreen(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Button(
-                        onClick = onSendCodeClick,
+                        onClick = {
+                            if (email.isEmpty()) {
+                                Toast.makeText(context, "Введите вашу почту!", Toast.LENGTH_SHORT)
+                                    .show()
+                                return@Button
+                            }
+                            // 1. Генерируем 4 цифры (например, "4892")
+                            val generatedCode = logInViewModel.generateCode()
+                            // 2. Показываем пользователю всплывашку с кодом
+                            Toast.makeText(
+                                context,
+                                "Ваш код подтверждения: $generatedCode",
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                            // 3. Переходим на экран VerificationScreen
+                            onSendCodeClick(generatedCode, email)
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(52.dp)
