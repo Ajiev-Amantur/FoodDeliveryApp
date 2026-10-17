@@ -2,17 +2,21 @@ package com.example.fooddeliveryapp.presentation.mainScreen
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
@@ -52,15 +56,22 @@ import org.koin.androidx.compose.koinViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(
+                android.graphics.Color.GREEN
+            )
+        )
+        val currentUser = FirebaseAuth.getInstance().currentUser
 
         val onBoardingPref = OnBoardingPref(this)
-        val startDestination = if (onBoardingPref.onBoardingCompleted()) {
+        val startDestination = if (currentUser!= null){
+            HomeRoute
+        }
+            else if (onBoardingPref.onBoardingCompleted()) {
             OnboardingRoute
         } else {
             WelcomeRoute
         }
-
         setContent {
             FoodDeliveryAppTheme {
                 val navController = rememberNavController()
@@ -75,10 +86,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.background(DarkBackground),
                     navController = navController,
                     startDestination = startDestination,
-                    enterTransition = { fadeIn(animationSpec = tween(250)) },
-                    exitTransition = { fadeOut(animationSpec = tween(250)) },
-                    popEnterTransition = { fadeIn(animationSpec = tween(250)) },
-                    popExitTransition = { fadeOut(animationSpec = tween(250)) }
+                    enterTransition = { slideInHorizontally(initialOffsetX = { it / 4 }) + fadeIn(animationSpec = tween(300)) },
+                    exitTransition = { slideOutHorizontally(targetOffsetX = { -it / 4 }) + fadeOut(animationSpec = tween(300)) },
+                    popEnterTransition = { slideInHorizontally(initialOffsetX = { -it / 4 }) + fadeIn(animationSpec = tween(300)) },
+                    popExitTransition = { slideOutHorizontally(targetOffsetX = { it / 4 }) + fadeOut(animationSpec = tween(300)) }
                 ) {
                     composable<WelcomeRoute> {
                         WelcomeStartScreen(

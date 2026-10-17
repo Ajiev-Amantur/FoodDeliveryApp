@@ -228,15 +228,14 @@ fun VerificationScreen(
 
                             // Сверяем введенный код с оригинальным кодом:
                             if (enteredCode == code) {
-                                // Если код совпал — отправляем реальное письмо от Google:
                                logInViewModel.resetPassword(userEmail) { isSuccess ->
                                     if (isSuccess) {
-                                        Toast.makeText(context, "Код верный! Письмо отправлено.", Toast.LENGTH_LONG).show()
-                                        onVerifyClick() // Переходим на Вход
+                                        Toast.makeText(context, "Code verified! Password reset link sent.", Toast.LENGTH_LONG).show()
+                                        onVerifyClick()
                                     }
                                 }
                             } else {
-                                Toast.makeText(context, "Неверный код!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Invalid code!", Toast.LENGTH_SHORT).show()
                             }
                                   },
                         modifier = Modifier

@@ -237,14 +237,13 @@ fun CartScreen(
     ) { innerPadding ->
         if (foods.isEmpty()) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    color = Color(0xFF00C569),
-                    trackColor = Color.Gray.copy(alpha = 0.2f)
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,) {
+                Text(
+                    text = "Cart is empty",
+                    color = Color.Green,
+                    fontSize = 30.sp,
+                    modifier = Modifier.padding(innerPadding)
                 )
             }
         } else {

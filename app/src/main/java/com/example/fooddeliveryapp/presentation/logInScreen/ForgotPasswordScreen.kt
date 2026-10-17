@@ -160,20 +160,17 @@ fun ForgotPasswordScreen(
                     Button(
                         onClick = {
                             if (email.isEmpty()) {
-                                Toast.makeText(context, "Введите вашу почту!", Toast.LENGTH_SHORT)
+                                Toast.makeText(context, "Please enter your email!", Toast.LENGTH_SHORT)
                                     .show()
                                 return@Button
                             }
-                            // 1. Генерируем 4 цифры (например, "4892")
                             val generatedCode = logInViewModel.generateCode()
-                            // 2. Показываем пользователю всплывашку с кодом
                             Toast.makeText(
                                 context,
-                                "Ваш код подтверждения: $generatedCode",
+                                "Your verification code: $generatedCode",
                                 Toast.LENGTH_LONG
                             ).show()
 
-                            // 3. Переходим на экран VerificationScreen
                             onSendCodeClick(generatedCode, email)
                         },
                         modifier = Modifier
