@@ -71,6 +71,7 @@ fun ProfileScreen(
     onFavoriteClick: () -> Unit = {},
     onCartClick: () -> Unit = {},
     onPaymentMethodsClick: () -> Unit = {},
+    onPersonalInfoClick: () -> Unit = {},
     onLogOutClick: () -> Unit = {}
 ) {
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
@@ -190,7 +191,7 @@ fun ProfileScreen(
                         ProfileMenuItem(
                             icon = Icons.Default.Person,
                             title = "Personal Info",
-                            onClick = {}
+                            onClick = onPersonalInfoClick
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))

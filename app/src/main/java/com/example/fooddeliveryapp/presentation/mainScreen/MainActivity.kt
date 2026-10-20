@@ -39,6 +39,8 @@ import com.example.fooddeliveryapp.presentation.detailsScreen.FoodDetailsScreen
 import com.example.fooddeliveryapp.presentation.detailsScreen.viewmodel.DetailScreenViewModel
 import com.example.fooddeliveryapp.presentation.logInScreen.viewmodel.LogInViewModel
 import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.HomeViewModel
+import com.example.fooddeliveryapp.presentation.profileScreen.EditProfileScreen
+import com.example.fooddeliveryapp.presentation.profileScreen.PersonalInfoScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.ProfileScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.viewmodel.ProfileViewModel
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.SavedFoodScreen
@@ -157,7 +159,7 @@ class MainActivity : ComponentActivity() {
                             userEmail = route.email,
                             onBackClick = { navController.popBackStack() },
                             onVerifyClick = {
-                                navController.navigate(HomeRoute) {
+                                navController.navigate(OnboardingRoute) {
                                     popUpTo(LoginRoute) { inclusive = true }
                                 }
                             }
@@ -277,11 +279,39 @@ class MainActivity : ComponentActivity() {
                             onFavoriteClick = { navController.navigate(SavedFoodRoute) },
                             onCartClick = { navController.navigate(CartRoute) },
                             onPaymentMethodsClick = { navController.navigate(PaymentRoute) },
+                            onPersonalInfoClick = { navController.navigate(PersonalInfoRote) },
                             onLogOutClick = {
                                 auth.signOut()
                                 navController.navigate(OnboardingRoute) {
                                     popUpTo(HomeRoute) { inclusive = true }
                                 }
+                            }
+                        )
+                    }
+                    composable<PersonalInfoRote> {
+                        val profileViewModel: ProfileViewModel = koinViewModel()
+                        val userDataState by profileViewModel.userData.collectAsState()
+
+                        PersonalInfoScreen(
+                            fullName = userDataState?.name ?: "Vishal Khadok",
+                            email = userDataState?.email ?: "hello@halallab.co",
+                            userPhotoUrl = userDataState?.photoUrl,
+                            onBackClick = { navController.popBackStack() },
+                            onEditClick = { navController.navigate(EdipProfileRoute) }
+                        )
+                    }
+                    composable<EdipProfileRoute> {
+                        val profileViewModel: ProfileViewModel = koinViewModel()
+                        val userDataState by profileViewModel.userData.collectAsState()
+
+                        EditProfileScreen(
+                            profileViewModel = profileViewModel,
+                            initialFullName = userDataState?.name ?: "Vishal Khadok",
+                            initialEmail = userDataState?.email ?: "hello@halallab.co",
+                            userPhotoUrl = userDataState?.photoUrl,
+                            onBackClick = { navController.popBackStack() },
+                            onSaveClick = { fullName, email, phone, bio ->
+                                navController.popBackStack()
                             }
                         )
                     }

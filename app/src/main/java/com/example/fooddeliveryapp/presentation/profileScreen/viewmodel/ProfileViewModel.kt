@@ -1,5 +1,8 @@
 package com.example.fooddeliveryapp.presentation.profileScreen.viewmodel
 
+import android.net.Uri
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fooddeliveryapp.domain.model.UserDataModel
@@ -11,8 +14,17 @@ class ProfileViewModel(
     private val authRepository: AuthRepository
 ): ViewModel() {
 
+    val selectedUri = mutableStateListOf<Uri>()
     init {
         getUserData()
+    }
+
+    fun updateUri(newUri: List<Uri>){
+        selectedUri.clear()
+        selectedUri.addAll(newUri)
+    }
+    fun clearPhotoPicker(){
+        selectedUri.clear()
     }
     private var _userData = MutableStateFlow<UserDataModel?>(null)
     val userData: MutableStateFlow<UserDataModel?> = _userData

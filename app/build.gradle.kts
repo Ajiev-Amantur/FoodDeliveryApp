@@ -85,5 +85,11 @@ dependencies {
 
     //coil
     implementation(libs.coil.compose)
+
+    // photo picker
+    // For apps using Compose
+    implementation(libs.photopicker.compose)
+    // For apps using Android views
+    implementation(libs.photopicker)
 }
 

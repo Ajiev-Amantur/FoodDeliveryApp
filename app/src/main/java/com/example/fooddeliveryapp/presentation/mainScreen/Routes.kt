@@ -27,6 +27,11 @@ object CartRoute
 
 @Serializable
 object ProfileRoute
+@Serializable
+object EdipProfileRoute
+
+@Serializable
+object PersonalInfoRote
 
 @Serializable
 object PaymentRoute
