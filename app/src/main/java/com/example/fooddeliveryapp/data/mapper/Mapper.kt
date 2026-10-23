@@ -76,7 +76,9 @@ fun UserDataModel.toEntity(): UserDataEntity {
     return UserDataEntity(
         name = this.name,
         email = this.email,
-        photoUrl = this.photoUrl
+        photoUrl = this.photoUrl,
+        phone = this.phone,
+        bio = this.bio
     )
 }
 
@@ -84,6 +86,8 @@ fun UserDataEntity.toModel(): UserDataModel{
     return UserDataModel(
         name = this.name,
         email = this.email,
-        photoUrl = this.photoUrl
+        photoUrl = this.photoUrl,
+        phone = this.phone,
+        bio = this.bio
     )
 }

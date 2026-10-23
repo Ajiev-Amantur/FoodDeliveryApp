@@ -25,6 +25,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,18 +42,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.fooddeliveryapp.presentation.profileScreen.viewmodel.ProfileViewModel
 import com.example.fooddeliveryapp.ui.theme.DarkBackground
 
 @Composable
 fun PersonalInfo(
+    profileViewModel: ProfileViewModel? = null,
     fullName: String = "Vishal Khadok",
     email: String = "hello@halallab.co",
     phone: String = "408-841-0926",
     bio: String = "I love fast food",
     userPhotoUrl: String? = null,
     onBackClick: () -> Unit = {},
-    onEditClick: () -> Unit = {},
+    onEditClick: () -> Unit = {}
 ) {
+    val userDataState by profileViewModel?.userData?.collectAsState() ?: remember { mutableStateOf(null) }
+
+    val currentName = userDataState?.name ?: fullName
+    val currentEmail = userDataState?.email ?: email
+    val currentPhone = userDataState?.phone ?: phone
+    val currentBio = userDataState?.bio ?: bio
+    val currentPhoto = userDataState?.photoUrl ?: userPhotoUrl
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -115,9 +129,9 @@ fun PersonalInfo(
                         .clip(CircleShape)
                         .background(Color(0xFF262835))
                 ) {
-                    if (!userPhotoUrl.isNullOrEmpty()) {
+                    if (!currentPhoto.isNullOrEmpty()) {
                         AsyncImage(
-                            model = userPhotoUrl,
+                            model = currentPhoto,
                             contentDescription = "Profile Picture",
                             modifier = Modifier
                                 .fillMaxSize()
@@ -138,7 +152,7 @@ fun PersonalInfo(
 
                 Column {
                     Text(
-                        text = fullName,
+                        text = currentName,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -147,7 +161,7 @@ fun PersonalInfo(
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = bio,
+                        text = currentBio,
                         fontSize = 14.sp,
                         color = Color(0xFFA0A5BA)
                     )
@@ -174,21 +188,21 @@ fun PersonalInfo(
                         icon = Icons.Default.Person,
                         iconTint = Color(0xFFFF7622),
                         label = "FULL NAME",
-                        value = fullName
+                        value = currentName
                     )
 
                     PersonalInfoItem(
                         icon = Icons.Default.Email,
                         iconTint = Color(0xFF5B67CA),
                         label = "EMAIL",
-                        value = email
+                        value = currentEmail
                     )
 
                     PersonalInfoItem(
                         icon = Icons.Default.Phone,
                         iconTint = Color(0xFF38B6FF),
                         label = "PHONE NUMBER",
-                        value = phone
+                        value = currentPhone
                     )
                 }
             }

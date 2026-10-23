@@ -213,7 +213,9 @@ fun SignUpScreen(
                               UserDataModel(
                                   name = name,
                                   email = email,
-                                  photoUrl = null
+                                  photoUrl = null,
+                                  phone = "408-841-0926",
+                                  bio = "I love fast food"
                               )
                             )
                             signUpViewModel.signUpWithEmail(

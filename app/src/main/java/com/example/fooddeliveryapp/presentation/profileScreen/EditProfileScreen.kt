@@ -51,7 +51,6 @@ import com.example.fooddeliveryapp.presentation.profileScreen.viewmodel.ProfileV
 import com.example.fooddeliveryapp.ui.theme.DarkBackground
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun EditProfileScreen(
@@ -173,11 +172,10 @@ fun EditProfileScreen(
                         .border(2.dp, DarkBackground, CircleShape)
                         .clickable {
                             photoPicker.launch(
-
                                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-
                             )
-                            onAvatarEditClick() }
+                            onAvatarEditClick()
+                        }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Edit,
@@ -297,7 +295,10 @@ fun EditProfileScreen(
 
             // SAVE Button
             Button(
-                onClick = { onSaveClick(fullName, email, phone, bio) },
+                onClick = {
+                    profileViewModel?.saveUserData(fullName, email, phone, bio)
+                    onSaveClick(fullName, email, phone, bio)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)

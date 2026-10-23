@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.4.21"
     alias(libs.plugins.kotlin.android)
      alias(libs.plugins.google.services)
 }
@@ -31,14 +31,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
     }
-    kotlinOptions {
-        jvmTarget = "11"
+
+}
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
@@ -86,10 +89,5 @@ dependencies {
     //coil
     implementation(libs.coil.compose)
 
-    // photo picker
-    // For apps using Compose
-    implementation(libs.photopicker.compose)
-    // For apps using Android views
-    implementation(libs.photopicker)
 }
 

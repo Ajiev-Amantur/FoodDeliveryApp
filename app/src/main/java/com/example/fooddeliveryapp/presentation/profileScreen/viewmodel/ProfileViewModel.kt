@@ -28,6 +28,7 @@ class ProfileViewModel(
     }
     private var _userData = MutableStateFlow<UserDataModel?>(null)
     val userData: MutableStateFlow<UserDataModel?> = _userData
+
     fun getUserData(){
         viewModelScope.launch {
             try {
@@ -35,6 +36,26 @@ class ProfileViewModel(
                 _userData.value = userData
             } catch (e: Exception) {
                 println("ProfileViewModel Error: ${e.message}")
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun saveUserData(name: String, email: String, phone: String, bio: String) {
+        viewModelScope.launch {
+            try {
+                val currentPhoto = selectedUri.firstOrNull()?.toString() ?: _userData.value?.photoUrl
+                val newUserData = UserDataModel(
+                    name = name,
+                    email = email,
+                    phone = phone,
+                    bio = bio,
+                    photoUrl = currentPhoto
+                )
+                authRepository.saveUserData(newUserData)
+                _userData.value = newUserData
+            } catch (e: Exception) {
+                println("ProfileViewModel Save Error: ${e.message}")
                 e.printStackTrace()
             }
         }

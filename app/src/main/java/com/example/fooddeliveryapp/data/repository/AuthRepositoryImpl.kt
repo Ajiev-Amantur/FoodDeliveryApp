@@ -102,7 +102,9 @@ class AuthRepositoryImpl(
         return UserDataModel(
             name = userData?.name ?: fireBaseUser?.displayName ?: "Food Lover",
             email = userData?.email ?: fireBaseUser?.email ?: "",
-            photoUrl = userData?.photoUrl ?: fireBaseUser?.photoUrl?.toString()
+            photoUrl = userData?.photoUrl ?: fireBaseUser?.photoUrl?.toString(),
+            phone = userData?.phone?: "enter your number",
+            bio = userData?.bio?: "I love foods"
         )
     }
 

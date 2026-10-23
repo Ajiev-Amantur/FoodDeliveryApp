@@ -17,8 +17,6 @@ kotlin = "2.1.0"
 composeBom = "2024.12.01"
 lottieCompose = "6.4.0"
 navigationCompose = "2.8.5"
-photopickerComposeVersion = "1.0.0-alpha02"
-photopickerVersion = "1.0.0-alpha02"
 room = "2.6.1"
 ksp = "2.1.0-1.0.29"
 
@@ -50,8 +48,6 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
-photopicker = { module = "androidx.photopicker:photopicker", version.ref = "photopickerVersion" }
-photopicker-compose = { module = "androidx.photopicker:photopicker-compose", version.ref = "photopickerComposeVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

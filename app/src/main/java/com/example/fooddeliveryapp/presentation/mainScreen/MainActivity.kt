@@ -293,8 +293,11 @@ class MainActivity : ComponentActivity() {
                         val userDataState by profileViewModel.userData.collectAsState()
 
                         PersonalInfoScreen(
+                            profileViewModel = profileViewModel,
                             fullName = userDataState?.name ?: "Vishal Khadok",
                             email = userDataState?.email ?: "hello@halallab.co",
+                            phone = userDataState?.phone ?: "408-841-0926",
+                            bio = userDataState?.bio ?: "I love fast food",
                             userPhotoUrl = userDataState?.photoUrl,
                             onBackClick = { navController.popBackStack() },
                             onEditClick = { navController.navigate(EdipProfileRoute) }
@@ -308,9 +311,12 @@ class MainActivity : ComponentActivity() {
                             profileViewModel = profileViewModel,
                             initialFullName = userDataState?.name ?: "Vishal Khadok",
                             initialEmail = userDataState?.email ?: "hello@halallab.co",
+                            initialPhone = userDataState?.phone ?: "408-841-0926",
+                            initialBio = userDataState?.bio ?: "I love fast food",
                             userPhotoUrl = userDataState?.photoUrl,
                             onBackClick = { navController.popBackStack() },
                             onSaveClick = { fullName, email, phone, bio ->
+                                profileViewModel.saveUserData(fullName, email, phone, bio)
                                 navController.popBackStack()
                             }
                         )
