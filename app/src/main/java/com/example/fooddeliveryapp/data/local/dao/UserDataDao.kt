@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.fooddeliveryapp.data.local.entity.UserDataEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDataDao {
@@ -13,6 +14,9 @@ interface UserDataDao {
 
     @Query("SELECT * FROM user_data LIMIT 1")
     suspend fun getUserData(): UserDataEntity?
+
+    @Query("SELECT * FROM user_data LIMIT 1")
+    fun getUserDataFlow(): Flow<UserDataEntity?>
 
     @Query("DELETE FROM user_data")
     suspend fun clearUser()

@@ -55,10 +55,10 @@ import com.example.fooddeliveryapp.ui.theme.GradientStart
 @Composable
 fun EditProfileScreen(
     profileViewModel: ProfileViewModel? = null,
-    initialFullName: String = "Vishal Khadok",
-    initialEmail: String = "hello@halallab.co",
-    initialPhone: String = "408-841-0926",
-    initialBio: String = "I love fast food",
+    initialFullName: String,
+    initialEmail: String,
+    initialPhone: String,
+    initialBio: String,
     userPhotoUrl: String? = null,
     onBackClick: () -> Unit = {},
     onSaveClick: (fullName: String, email: String, phone: String, bio: String) -> Unit = { _, _, _, _ -> },
@@ -322,8 +322,8 @@ fun EditProfileScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun EditProfileScreenPreview() {
-    EditProfileScreen()
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun EditProfileScreenPreview() {
+//    EditProfileScreen()
+//}

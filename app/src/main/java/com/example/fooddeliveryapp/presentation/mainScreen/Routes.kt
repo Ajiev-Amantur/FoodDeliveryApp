@@ -34,6 +34,19 @@ object EdipProfileRoute
 object PersonalInfoRote
 
 @Serializable
+object AddressListRoute
+
+@Serializable
+data class AddAddressRoute(
+    val id: Int = 0,
+    val address: String = "",
+    val street: String = "",
+    val postCode: String = "",
+    val appartment: String = "",
+    val label: String = "Home"
+)
+
+@Serializable
 object PaymentRoute
 @Serializable
 data class AddCardRoute(val cardName: String)

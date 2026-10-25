@@ -91,3 +91,25 @@ fun UserDataEntity.toModel(): UserDataModel{
         bio = this.bio
     )
 }
+
+fun com.example.fooddeliveryapp.domain.model.AddressModel.toEntity(): com.example.fooddeliveryapp.data.local.entity.AddressEntity {
+    return com.example.fooddeliveryapp.data.local.entity.AddressEntity(
+        id = this.id,
+        address = this.address,
+        street = this.street,
+        postCode = this.postCode,
+        appartment = this.appartment,
+        label = this.label
+    )
+}
+
+fun com.example.fooddeliveryapp.data.local.entity.AddressEntity.toModel(): com.example.fooddeliveryapp.domain.model.AddressModel {
+    return com.example.fooddeliveryapp.domain.model.AddressModel(
+        id = this.id,
+        address = this.address,
+        street = this.street,
+        postCode = this.postCode,
+        appartment = this.appartment,
+        label = this.label
+    )
+}

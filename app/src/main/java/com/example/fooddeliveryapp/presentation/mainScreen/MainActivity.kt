@@ -39,6 +39,9 @@ import com.example.fooddeliveryapp.presentation.detailsScreen.FoodDetailsScreen
 import com.example.fooddeliveryapp.presentation.detailsScreen.viewmodel.DetailScreenViewModel
 import com.example.fooddeliveryapp.presentation.logInScreen.viewmodel.LogInViewModel
 import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.HomeViewModel
+import com.example.fooddeliveryapp.domain.model.AddressModel
+import com.example.fooddeliveryapp.presentation.addressScreen.MyAddressScreen
+import com.example.fooddeliveryapp.presentation.profileScreen.AddAddressScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.EditProfileScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.PersonalInfoScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.ProfileScreen
@@ -280,11 +283,67 @@ class MainActivity : ComponentActivity() {
                             onCartClick = { navController.navigate(CartRoute) },
                             onPaymentMethodsClick = { navController.navigate(PaymentRoute) },
                             onPersonalInfoClick = { navController.navigate(PersonalInfoRote) },
+                            onAddressesClick = { navController.navigate(AddressListRoute) },
                             onLogOutClick = {
                                 auth.signOut()
                                 navController.navigate(OnboardingRoute) {
                                     popUpTo(HomeRoute) { inclusive = true }
                                 }
+                            }
+                        )
+                    }
+                    composable<AddressListRoute> { navBackEntry ->
+                        val profileEntry = remember(navBackEntry) {
+                            navController.getBackStackEntry<ProfileRoute>()
+                        }
+                        val profileViewModel: ProfileViewModel = koinViewModel(viewModelStoreOwner = profileEntry)
+
+                        MyAddressScreen(
+                            profileViewModel = profileViewModel,
+                            onBackClick = { navController.popBackStack() },
+                            onAddNewAddressClick = {
+                                navController.navigate(AddAddressRoute())
+                            },
+                            onEditAddressClick = { address ->
+                                navController.navigate(
+                                    AddAddressRoute(
+                                        id = address.id,
+                                        address = address.address,
+                                        street = address.street,
+                                        postCode = address.postCode,
+                                        appartment = address.appartment,
+                                        label = address.label
+                                    )
+                                )
+                            }
+                        )
+                    }
+                    composable<AddAddressRoute> { backStackEntry ->
+                        val profileEntry = remember(backStackEntry) {
+                            navController.getBackStackEntry<ProfileRoute>()
+                        }
+                        val profileViewModel: ProfileViewModel = koinViewModel(viewModelStoreOwner = profileEntry)
+                        val route: AddAddressRoute = backStackEntry.toRoute()
+
+                        AddAddressScreen(
+                            initialAddress = route.address,
+                            initialStreet = route.street,
+                            initialPostCode = route.postCode,
+                            initialAppartment = route.appartment,
+                            initialLabel = if (route.label.isEmpty()) "Home" else route.label,
+                            onBackClick = { navController.popBackStack() },
+                            onSaveClick = { address: String, street: String, postCode: String, appartment: String, label: String ->
+                                profileViewModel.addUserAddress(
+                                    AddressModel(
+                                        id = route.id,
+                                        address = address,
+                                        street = street,
+                                        postCode = postCode,
+                                        appartment = appartment,
+                                        label = label
+                                    )
+                                )
+                                navController.popBackStack()
                             }
                         )
                     }

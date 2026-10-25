@@ -14,6 +14,8 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -78,6 +80,8 @@ class AuthRepositoryImpl(
         }
     }
 
+    
+
     override suspend fun saveUserData(userDataModel: UserDataModel) {
         dao.addUserData(userDataModel.toEntity())
     }
@@ -93,19 +97,21 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun getUserData(): UserDataModel? {
+    override fun getUserData(): Flow<UserDataModel?> {
         val fireBaseUser = firebaseAuth.currentUser
-        val userData = dao.getUserData()
-        
-        if (fireBaseUser == null && userData == null) return null
-
-        return UserDataModel(
-            name = userData?.name ?: fireBaseUser?.displayName ?: "Food Lover",
-            email = userData?.email ?: fireBaseUser?.email ?: "",
-            photoUrl = userData?.photoUrl ?: fireBaseUser?.photoUrl?.toString(),
-            phone = userData?.phone?: "enter your number",
-            bio = userData?.bio?: "I love foods"
-        )
+        return dao.getUserDataFlow().map { userData ->
+            if (fireBaseUser == null && userData == null) {
+                null
+            } else {
+                UserDataModel(
+                    name = userData?.name ?: fireBaseUser?.displayName ?: "Food Lover",
+                    email = userData?.email ?: fireBaseUser?.email ?: "",
+                    photoUrl = userData?.photoUrl ?: fireBaseUser?.photoUrl?.toString(),
+                    phone = userData?.phone ?: "enter your number",
+                    bio = userData?.bio ?: "I love foods"
+                )
+            }
+        }
     }
 
 }

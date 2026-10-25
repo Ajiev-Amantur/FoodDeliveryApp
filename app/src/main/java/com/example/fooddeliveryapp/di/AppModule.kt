@@ -1,20 +1,19 @@
 package com.example.fooddeliveryapp.di
 
 import androidx.room.Room
-import com.example.fooddeliveryapp.data.local.dao.UserDataDao
 import com.example.fooddeliveryapp.data.local.database.CardDataDatabase
 import com.example.fooddeliveryapp.data.local.database.CartFoodDataBase
 import com.example.fooddeliveryapp.data.local.database.FavoriteFoodDataBase
+import com.example.fooddeliveryapp.data.local.database.UserAdressesDataBase
 import com.example.fooddeliveryapp.data.local.database.UserDatabase
-import com.example.fooddeliveryapp.data.local.entity.CardDataEntity
 import com.example.fooddeliveryapp.data.repository.AuthRepositoryImpl
 import com.example.fooddeliveryapp.data.repository.FoodCartRepositoryImpl
-import org.koin.core.module.dsl.viewModel
-import org.koin.dsl.module
 import com.example.fooddeliveryapp.data.repository.GetFoodDataRepositoryImpl
+import com.example.fooddeliveryapp.data.repository.UserAdressesRepositoryImpl
 import com.example.fooddeliveryapp.domain.repository.AuthRepository
 import com.example.fooddeliveryapp.domain.repository.CartFoodRepository
 import com.example.fooddeliveryapp.domain.repository.GetFoodDataRepository
+import com.example.fooddeliveryapp.domain.repository.UserAdressRepository
 import com.example.fooddeliveryapp.domain.usecase.FilterFoodByCategory
 import com.example.fooddeliveryapp.domain.usecase.GetFavoriteFoodUseCase
 import com.example.fooddeliveryapp.presentation.cartScreen.viewModel.CartScreenViewModel
@@ -25,12 +24,16 @@ import com.example.fooddeliveryapp.presentation.profileScreen.viewmodel.ProfileV
 import com.example.fooddeliveryapp.presentation.savedFoodScreen.viewmodel.SavedFoodViewModel
 import com.example.fooddeliveryapp.presentation.signUpScreen.viewmodel.SignUpViewModel
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
 
 val appModule = module {
     // Репозитории
     single<GetFoodDataRepository> { GetFoodDataRepositoryImpl(get()) }
     single<CartFoodRepository> { FoodCartRepositoryImpl(get(), get()) }
-    single<AuthRepository>{ AuthRepositoryImpl(get(),get()) }
+    single<AuthRepository>{ AuthRepositoryImpl(get(), get()) }
+    single<UserAdressRepository>{ UserAdressesRepositoryImpl(get()) }
+
     // ViewModels
     viewModel { HomeViewModel(get(), FilterFoodByCategory()) }
     viewModel { SavedFoodViewModel(get(), GetFavoriteFoodUseCase()) }
@@ -38,7 +41,7 @@ val appModule = module {
     viewModel { CartScreenViewModel(get()) }
     viewModel { LogInViewModel(get()) }
     viewModel { SignUpViewModel(get()) }
-    viewModel { ProfileViewModel(get()) }
+    viewModel { ProfileViewModel(get(), get()) }
 
     single {
         Room.databaseBuilder(
@@ -74,5 +77,14 @@ val appModule = module {
             "user_db"
         ).build()
     }
-    single{ get<UserDatabase>().dao()}
+    single { get<UserDatabase>().dao() }
+
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            UserAdressesDataBase::class.java,
+            "user_addresses_db"
+        ).build()
+    }
+    single { get<UserAdressesDataBase>().dao() }
 }
