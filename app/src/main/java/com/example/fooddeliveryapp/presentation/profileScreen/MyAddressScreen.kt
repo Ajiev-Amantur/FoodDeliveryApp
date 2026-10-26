@@ -1,4 +1,4 @@
-package com.example.fooddeliveryapp.presentation.addressScreen
+package com.example.fooddeliveryapp.presentation.profileScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -37,7 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.domain.model.AddressModel
-import com.example.fooddeliveryapp.presentation.profileScreen.AdressItem
 import com.example.fooddeliveryapp.presentation.profileScreen.viewmodel.ProfileViewModel
 import com.example.fooddeliveryapp.ui.theme.DarkBackground
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
@@ -50,28 +49,10 @@ fun MyAddressScreen(
     onAddNewAddressClick: () -> Unit = {},
     onEditAddressClick: (AddressModel) -> Unit = {}
 ) {
-    val addresses by profileViewModel?.userAddresses?.collectAsState() ?: remember {
-        mutableStateOf(
-            listOf(
-                AddressModel(
-                    id = 1,
-                    address = "2464 Royal Ln. Mesa, New Jersey 45463",
-                    street = "Royal Ln",
-                    postCode = "45463",
-                    appartment = "2464",
-                    label = "HOME"
-                ),
-                AddressModel(
-                    id = 2,
-                    address = "3891 Ranchview Dr. Richardson, California 62639",
-                    street = "Ranchview Dr",
-                    postCode = "62639",
-                    appartment = "3891",
-                    label = "WORK"
-                )
-            )
-        )
+    val addressesFlow = remember(profileViewModel) {
+        profileViewModel?.userAddresses ?: kotlinx.coroutines.flow.MutableStateFlow(emptyList())
     }
+    val addresses by addressesFlow.collectAsState()
 
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
 
@@ -140,7 +121,7 @@ fun MyAddressScreen(
                         items = addresses,
                         key = { it.id }
                     ) { address ->
-                        AdressItem(
+                        AddressItem(
                             addressModel = address,
                             onEditClick = { onEditAddressClick(address) },
                             onDeleteClick = { profileViewModel?.deleteUserAddress(address) }

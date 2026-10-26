@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.fooddeliveryapp.domain.model.AddressModel
 import com.example.fooddeliveryapp.domain.model.UserDataModel
 import com.example.fooddeliveryapp.domain.repository.AuthRepository
-import com.example.fooddeliveryapp.domain.repository.UserAdressRepository
+import com.example.fooddeliveryapp.domain.repository.UserAddressRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val authRepository: AuthRepository,
-    private val userAdressesRepository: UserAdressRepository
+    private val userAddressesRepository: UserAddressRepository
 ): ViewModel() {
 
     val selectedUri = mutableStateListOf<Uri>()
@@ -31,17 +31,17 @@ class ProfileViewModel(
 
     fun addUserAddress(addressModel: AddressModel){
         viewModelScope.launch {
-            userAdressesRepository.addAdressUser(addressModel)
+            userAddressesRepository.addAddressUser(addressModel)
         }
     }
 
     fun deleteUserAddress(addressModel: AddressModel){
         viewModelScope.launch {
-            userAdressesRepository.deleteAdress(addressModel)
+            userAddressesRepository.deleteAddress(addressModel)
         }
     }
 
-    val userAddresses: StateFlow<List<AddressModel>> = userAdressesRepository.getUserAdresses()
+    val userAddresses: StateFlow<List<AddressModel>> = userAddressesRepository.getUserAddresses()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),

@@ -4,16 +4,16 @@ import androidx.room.Room
 import com.example.fooddeliveryapp.data.local.database.CardDataDatabase
 import com.example.fooddeliveryapp.data.local.database.CartFoodDataBase
 import com.example.fooddeliveryapp.data.local.database.FavoriteFoodDataBase
-import com.example.fooddeliveryapp.data.local.database.UserAdressesDataBase
+import com.example.fooddeliveryapp.data.local.database.UserAddressesDatabase
 import com.example.fooddeliveryapp.data.local.database.UserDatabase
 import com.example.fooddeliveryapp.data.repository.AuthRepositoryImpl
 import com.example.fooddeliveryapp.data.repository.FoodCartRepositoryImpl
 import com.example.fooddeliveryapp.data.repository.GetFoodDataRepositoryImpl
-import com.example.fooddeliveryapp.data.repository.UserAdressesRepositoryImpl
+import com.example.fooddeliveryapp.data.repository.UserAddressesRepositoryImpl
 import com.example.fooddeliveryapp.domain.repository.AuthRepository
 import com.example.fooddeliveryapp.domain.repository.CartFoodRepository
 import com.example.fooddeliveryapp.domain.repository.GetFoodDataRepository
-import com.example.fooddeliveryapp.domain.repository.UserAdressRepository
+import com.example.fooddeliveryapp.domain.repository.UserAddressRepository
 import com.example.fooddeliveryapp.domain.usecase.FilterFoodByCategory
 import com.example.fooddeliveryapp.domain.usecase.GetFavoriteFoodUseCase
 import com.example.fooddeliveryapp.presentation.cartScreen.viewModel.CartScreenViewModel
@@ -32,7 +32,7 @@ val appModule = module {
     single<GetFoodDataRepository> { GetFoodDataRepositoryImpl(get()) }
     single<CartFoodRepository> { FoodCartRepositoryImpl(get(), get()) }
     single<AuthRepository>{ AuthRepositoryImpl(get(), get()) }
-    single<UserAdressRepository>{ UserAdressesRepositoryImpl(get()) }
+    single<UserAddressRepository>{ UserAddressesRepositoryImpl(get()) }
 
     // ViewModels
     viewModel { HomeViewModel(get(), FilterFoodByCategory()) }
@@ -82,9 +82,9 @@ val appModule = module {
     single {
         Room.databaseBuilder(
             androidContext(),
-            UserAdressesDataBase::class.java,
+            UserAddressesDatabase::class.java,
             "user_addresses_db"
         ).build()
     }
-    single { get<UserAdressesDataBase>().dao() }
+    single { get<UserAddressesDatabase>().dao() }
 }

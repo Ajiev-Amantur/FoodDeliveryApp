@@ -74,6 +74,7 @@ fun CardDataModel.toEntity(): CardDataEntity{
 
 fun UserDataModel.toEntity(): UserDataEntity {
     return UserDataEntity(
+        id = 1,
         name = this.name,
         email = this.email,
         photoUrl = this.photoUrl,

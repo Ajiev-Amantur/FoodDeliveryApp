@@ -27,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.fooddeliveryapp.presentation.profileScreen.viewmodel.ProfileViewModel
 import com.example.fooddeliveryapp.ui.theme.DarkBackground
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun PersonalInfo(
@@ -56,7 +56,10 @@ fun PersonalInfo(
     onBackClick: () -> Unit = {},
     onEditClick: () -> Unit = {}
 ) {
-    val userDataState by profileViewModel?.userData?.collectAsState() ?: remember { mutableStateOf(null) }
+    val userDataFlow = remember(profileViewModel) {
+        profileViewModel?.userData ?: MutableStateFlow(null)
+    }
+    val userDataState by userDataFlow.collectAsState()
 
     val currentName = userDataState?.name ?: fullName
     val currentEmail = userDataState?.email ?: email

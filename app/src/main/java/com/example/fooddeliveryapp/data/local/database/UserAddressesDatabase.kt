@@ -6,6 +6,6 @@ import com.example.fooddeliveryapp.data.local.dao.AddressDao
 import com.example.fooddeliveryapp.data.local.entity.AddressEntity
 
 @Database(entities = [AddressEntity::class], version = 1)
-abstract class UserAdressesDataBase : RoomDatabase() {
+abstract class UserAddressesDatabase : RoomDatabase() {
     abstract fun dao(): AddressDao
 }

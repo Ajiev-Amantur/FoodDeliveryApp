@@ -64,10 +64,10 @@ fun EditProfileScreen(
     onSaveClick: (fullName: String, email: String, phone: String, bio: String) -> Unit = { _, _, _, _ -> },
     onAvatarEditClick: () -> Unit = {}
 ) {
-    var fullName by remember { mutableStateOf(initialFullName) }
-    var email by remember { mutableStateOf(initialEmail) }
-    var phone by remember { mutableStateOf(initialPhone) }
-    var bio by remember { mutableStateOf(initialBio) }
+    var fullName by remember(initialFullName) { mutableStateOf(initialFullName) }
+    var email by remember(initialEmail) { mutableStateOf(initialEmail) }
+    var phone by remember(initialPhone) { mutableStateOf(initialPhone) }
+    var bio by remember(initialBio) { mutableStateOf(initialBio) }
 
     val selectedUris = profileViewModel?.selectedUri
     val avatarModel: Any? = selectedUris?.firstOrNull() ?: userPhotoUrl

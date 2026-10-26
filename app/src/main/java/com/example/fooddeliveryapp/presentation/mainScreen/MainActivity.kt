@@ -14,10 +14,7 @@ import androidx.compose.foundation.background
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,7 +23,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.fooddeliveryapp.HomeScreenUI
 import com.example.fooddeliveryapp.OnboardingScreen
-import com.example.fooddeliveryapp.presentation.logInScreen.AuthManager
 import com.example.fooddeliveryapp.presentation.logInScreen.ForgotPasswordScreen
 import com.example.fooddeliveryapp.presentation.logInScreen.LogInScreen
 import com.example.fooddeliveryapp.presentation.logInScreen.VerificationScreen
@@ -40,7 +36,7 @@ import com.example.fooddeliveryapp.presentation.detailsScreen.viewmodel.DetailSc
 import com.example.fooddeliveryapp.presentation.logInScreen.viewmodel.LogInViewModel
 import com.example.fooddeliveryapp.presentation.mainScreen.viewmodel.HomeViewModel
 import com.example.fooddeliveryapp.domain.model.AddressModel
-import com.example.fooddeliveryapp.presentation.addressScreen.MyAddressScreen
+import com.example.fooddeliveryapp.presentation.profileScreen.MyAddressScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.AddAddressScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.EditProfileScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.PersonalInfoScreen
@@ -55,7 +51,6 @@ import com.example.fooddeliveryapp.presentation.welcomeStartScreen.WelcomeStartS
 import com.example.fooddeliveryapp.ui.theme.DarkBackground
 import com.example.fooddeliveryapp.ui.theme.FoodDeliveryAppTheme
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
