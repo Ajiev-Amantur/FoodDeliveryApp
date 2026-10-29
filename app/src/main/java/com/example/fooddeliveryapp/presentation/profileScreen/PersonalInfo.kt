@@ -56,10 +56,10 @@ fun PersonalInfo(
     onBackClick: () -> Unit = {},
     onEditClick: () -> Unit = {}
 ) {
-    val userDataFlow = remember(profileViewModel) {
-        profileViewModel?.userData ?: MutableStateFlow(null)
+    val personalDataFlow = remember(profileViewModel) {
+        profileViewModel?.personalData ?: MutableStateFlow(null)
     }
-    val userDataState by userDataFlow.collectAsState()
+    val userDataState by personalDataFlow.collectAsState()
 
     val currentName = userDataState?.name ?: fullName
     val currentEmail = userDataState?.email ?: email

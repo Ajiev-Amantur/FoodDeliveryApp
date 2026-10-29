@@ -8,8 +8,10 @@ import com.example.fooddeliveryapp.domain.model.AddressModel
 import com.example.fooddeliveryapp.domain.model.UserDataModel
 import com.example.fooddeliveryapp.domain.repository.AuthRepository
 import com.example.fooddeliveryapp.domain.repository.UserAddressRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -18,7 +20,26 @@ class ProfileViewModel(
     private val userAddressesRepository: UserAddressRepository
 ): ViewModel() {
 
+    private val _personalData = MutableStateFlow<UserDataModel?>(null)
+    val personalData: StateFlow<UserDataModel?> = _personalData.asStateFlow()
     val selectedUri = mutableStateListOf<Uri>()
+
+    init {
+        getUserData()
+    }
+
+    fun getUserData() {
+        viewModelScope.launch {
+            try {
+                authRepository.getUserData().collect { data ->
+                    _personalData.value = data
+                }
+            } catch (e: Exception) {
+                println("ProfileViewModel Error: ${e.message}")
+                e.printStackTrace()
+            }
+        }
+    }
 
     fun updateUri(newUri: List<Uri>){
         selectedUri.clear()
@@ -48,17 +69,10 @@ class ProfileViewModel(
             initialValue = emptyList()
         )
 
-    val userData: StateFlow<UserDataModel?> = authRepository.getUserData()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null
-        )
-
     fun saveUserData(name: String, email: String, phone: String, bio: String) {
         viewModelScope.launch {
             try {
-                val currentPhoto = selectedUri.firstOrNull()?.toString() ?: userData.value?.photoUrl
+                val currentPhoto = selectedUri.firstOrNull()?.toString() ?: _personalData.value?.photoUrl ?: ""
                 val newUserData = UserDataModel(
                     name = name,
                     email = email,
@@ -67,6 +81,7 @@ class ProfileViewModel(
                     photoUrl = currentPhoto
                 )
                 authRepository.saveUserData(newUserData)
+                _personalData.value = newUserData
             } catch (e: Exception) {
                 println("ProfileViewModel Save Error: ${e.message}")
                 e.printStackTrace()

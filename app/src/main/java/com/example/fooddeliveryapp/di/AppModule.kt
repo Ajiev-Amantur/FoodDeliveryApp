@@ -48,7 +48,7 @@ val appModule = module {
             androidContext(),
             FavoriteFoodDataBase::class.java,
             "favorite_food_db"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
     single { get<FavoriteFoodDataBase>().favoriteDao() }
 
@@ -57,7 +57,7 @@ val appModule = module {
             androidContext(),
             CartFoodDataBase::class.java,
             "cart_db"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
     single { get<CartFoodDataBase>().cartDao() }
     
@@ -66,7 +66,7 @@ val appModule = module {
             androidContext(),
             CardDataDatabase::class.java,
             "card_data_db"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
     single { get<CardDataDatabase>().cartDataDao() }
 
@@ -75,7 +75,7 @@ val appModule = module {
             androidContext(),
             UserDatabase::class.java,
             "user_db"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
     single { get<UserDatabase>().dao() }
 
@@ -84,7 +84,7 @@ val appModule = module {
             androidContext(),
             UserAddressesDatabase::class.java,
             "user_addresses_db"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
     single { get<UserAddressesDatabase>().dao() }
 }

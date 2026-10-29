@@ -34,7 +34,7 @@ class CartScreenViewModel(
 
     init {
         loadCartFoods()
-        loadCartFoods()
+        loadCardsUserData()
     }
 
     fun minusCount(foodItem: CartFoodModel) {
@@ -70,6 +70,12 @@ class CartScreenViewModel(
                     CVC = CVC.value
                 )
             )
+        }
+    }
+
+    fun deleteCard(cardData: CardDataModel) {
+        viewModelScope.launch {
+            cartFoodRepository.deleteCard(cardData)
         }
     }
 

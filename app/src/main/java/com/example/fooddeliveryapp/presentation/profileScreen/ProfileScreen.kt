@@ -73,6 +73,7 @@ fun ProfileScreen(
     onPaymentMethodsClick: () -> Unit = {},
     onPersonalInfoClick: () -> Unit = {},
     onAddressesClick: () -> Unit = {},
+    onChangePasswordClick: () -> Unit = {},
     onLogOutClick: () -> Unit = {}
 ) {
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
@@ -96,10 +97,7 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .paint(
-                    painter = painterResource(id = R.drawable.ic_food_fon),
-                    contentScale = ContentScale.Crop
-                )
+                .background(DarkBackground)
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
 
@@ -135,7 +133,7 @@ fun ProfileScreen(
                             .clip(CircleShape)
                             .background(Color.White)
                     ) {
-                        if (userPhotoUrl != null) {
+                        if (!userPhotoUrl.isNullOrEmpty()) {
                             AsyncImage(
                                 model = userPhotoUrl,
                                 contentDescription = "User Avatar",
@@ -224,7 +222,7 @@ fun ProfileScreen(
                         ProfileMenuItem(
                             icon = Icons.Default.Lock,
                             title = "Change Password",
-                            onClick = {}
+                            onClick = onChangePasswordClick
                         )
 
                         Spacer(modifier = Modifier.height(28.dp))

@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.cancellation.CancellationException
@@ -111,6 +112,9 @@ class AuthRepositoryImpl(
                     bio = userData?.bio ?: "I love foods"
                 )
             }
+        }.catch { e ->
+            println("AuthRepositoryImpl getUserData error: ${e.message}")
+            emit(null)
         }
     }
 

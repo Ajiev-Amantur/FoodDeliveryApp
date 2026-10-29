@@ -70,7 +70,7 @@ fun EditProfileScreen(
     var bio by remember(initialBio) { mutableStateOf(initialBio) }
 
     val selectedUris = profileViewModel?.selectedUri
-    val avatarModel: Any? = selectedUris?.firstOrNull() ?: userPhotoUrl
+    val avatarModel: Any? = selectedUris?.firstOrNull() ?: userPhotoUrl.takeIf { !it.isNullOrEmpty() }
 
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
 

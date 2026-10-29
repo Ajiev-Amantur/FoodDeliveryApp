@@ -84,7 +84,11 @@ class FoodCartRepositoryImpl(
         )
     }
 
-    override suspend fun getAllDataCards(): Flow<List<CardDataModel>> {
+    override suspend fun deleteCard(cardData: CardDataModel) {
+        cardDataDao.deleteCard(cardData.toEntity())
+    }
+
+    override fun getAllDataCards(): Flow<List<CardDataModel>> {
         return cardDataDao.getAllCards().map { list ->
             list.map { it.toModel() }
         }

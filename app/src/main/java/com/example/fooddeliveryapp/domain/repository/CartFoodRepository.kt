@@ -13,5 +13,6 @@ interface CartFoodRepository {
     fun getCartFoods(): Flow<List<CartFoodModel>>
 
     suspend fun addCard(cardData: CardDataModel)
-    suspend fun getAllDataCards(): Flow<List<CardDataModel>>
+    suspend fun deleteCard(cardData: CardDataModel)
+    fun getAllDataCards(): Flow<List<CardDataModel>>
 }

@@ -39,6 +39,7 @@ import com.example.fooddeliveryapp.domain.model.AddressModel
 import com.example.fooddeliveryapp.presentation.profileScreen.MyAddressScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.AddAddressScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.EditProfileScreen
+import com.example.fooddeliveryapp.presentation.profileScreen.PaymentMethodsScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.PersonalInfoScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.ProfileScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.viewmodel.ProfileViewModel
@@ -262,7 +263,7 @@ class MainActivity : ComponentActivity() {
                         val isSelectedProfileScreen = currentDestination?.hasRoute<ProfileRoute>() == true
                         val auth = remember { FirebaseAuth.getInstance() }
                         val profileViewModel: ProfileViewModel = koinViewModel()
-                        val userDataState by profileViewModel.userData.collectAsState()
+                        val userDataState by profileViewModel.personalData.collectAsState()
 
                         ProfileScreen(
                             userName = userDataState?.name ?: "User",
@@ -276,9 +277,10 @@ class MainActivity : ComponentActivity() {
                             onHomeClick = { navController.navigate(HomeRoute) },
                             onFavoriteClick = { navController.navigate(SavedFoodRoute) },
                             onCartClick = { navController.navigate(CartRoute) },
-                            onPaymentMethodsClick = { navController.navigate(PaymentRoute) },
+                            onPaymentMethodsClick = { navController.navigate(PaymentMethodsRoute) },
                             onPersonalInfoClick = { navController.navigate(PersonalInfoRote) },
                             onAddressesClick = { navController.navigate(AddressListRoute) },
+                            onChangePasswordClick = { navController.navigate(ForgotPasswordRoute) },
                             onLogOutClick = {
                                 auth.signOut()
                                 navController.navigate(OnboardingRoute) {
@@ -287,11 +289,19 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
-                    composable<AddressListRoute> { navBackEntry ->
-                        val profileEntry = remember(navBackEntry) {
-                            navController.getBackStackEntry<ProfileRoute>()
-                        }
-                        val profileViewModel: ProfileViewModel = koinViewModel(viewModelStoreOwner = profileEntry)
+                    composable<PaymentMethodsRoute> {
+                        val cartScreenViewModel: CartScreenViewModel = koinViewModel()
+
+                        PaymentMethodsScreen(
+                            cartScreenViewModel = cartScreenViewModel,
+                            onBackClick = { navController.popBackStack() },
+                            onAddCardClick = { cardName ->
+                                navController.navigate(AddCardRoute(cardName))
+                            }
+                        )
+                    }
+                    composable<AddressListRoute> {
+                        val profileViewModel: ProfileViewModel = koinViewModel()
 
                         MyAddressScreen(
                             profileViewModel = profileViewModel,
@@ -314,10 +324,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable<AddAddressRoute> { backStackEntry ->
-                        val profileEntry = remember(backStackEntry) {
-                            navController.getBackStackEntry<ProfileRoute>()
-                        }
-                        val profileViewModel: ProfileViewModel = koinViewModel(viewModelStoreOwner = profileEntry)
+                        val profileViewModel: ProfileViewModel = koinViewModel()
                         val route: AddAddressRoute = backStackEntry.toRoute()
 
                         AddAddressScreen(
@@ -344,22 +351,16 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<PersonalInfoRote> {
                         val profileViewModel: ProfileViewModel = koinViewModel()
-                        val userDataState by profileViewModel.userData.collectAsState()
 
                         PersonalInfoScreen(
                             profileViewModel = profileViewModel,
-                            fullName = userDataState?.name ?: "Vishal Khadok",
-                            email = userDataState?.email ?: "hello@halallab.co",
-                            phone = userDataState?.phone ?: "408-841-0926",
-                            bio = userDataState?.bio ?: "I love fast food",
-                            userPhotoUrl = userDataState?.photoUrl,
                             onBackClick = { navController.popBackStack() },
                             onEditClick = { navController.navigate(EdipProfileRoute) }
                         )
                     }
                     composable<EdipProfileRoute> {
                         val profileViewModel: ProfileViewModel = koinViewModel()
-                        val userDataState by profileViewModel.userData.collectAsState()
+                        val userDataState by profileViewModel.personalData.collectAsState()
 
                         EditProfileScreen(
                             profileViewModel = profileViewModel,
