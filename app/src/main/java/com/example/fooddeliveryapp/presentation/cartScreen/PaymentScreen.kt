@@ -1,6 +1,8 @@
 package com.example.fooddeliveryapp.presentation.cartScreen
 
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,10 +24,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.R
+import com.example.fooddeliveryapp.domain.model.OrderHistoryModel
 import com.example.fooddeliveryapp.presentation.cartScreen.viewModel.CartScreenViewModel
 import com.example.fooddeliveryapp.ui.theme.GradientEnd
 import com.example.fooddeliveryapp.ui.theme.GradientStart
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PaymentScreen(
     onBackClick: () -> Unit,
@@ -36,7 +42,10 @@ fun PaymentScreen(
     var selectedMethod by remember { mutableStateOf("Mastercard") }
     val gradient = Brush.horizontalGradient(listOf(GradientStart, GradientEnd))
     val totalFoodPrice = cartScreenViewModel.totalPrice
-    val cardsData = cartScreenViewModel.cardsData.collectAsState()
+    val foods = cartScreenViewModel.cartFood.collectAsState()
+    val cardsData = cartScreenViewModel.cardsData.collectAsState(
+    )
+
     val paymentMethods = listOf(
         Pair("Cash", R.drawable.ic_cash),
         Pair("Visa", R.drawable.ic_visa),
@@ -46,6 +55,7 @@ fun PaymentScreen(
     LaunchedEffect(Unit) {
         cartScreenViewModel.loadCardsUserData()
     }
+
 
     Scaffold(
         containerColor = Color.Black,
@@ -104,7 +114,28 @@ fun PaymentScreen(
                         .height(60.dp)
                         .background(gradient, RoundedCornerShape(20.dp))
                         .clip(RoundedCornerShape(20.dp))
-                        .clickable { onConfirmClick() },
+                        .clickable {
+                            // 1. Получить текущую дату и время
+                            val current = LocalDateTime.now()
+
+                            val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
+
+                            val formattedDate = current.format(formatter)
+                            val historyList = foods.value.map { food ->
+                                OrderHistoryModel(
+                                    orderId = "20_sks",
+                                    date = formattedDate.toString(),
+                                    status = "Delivered",
+                                    itemsSummary = food.quantity.toString(),
+                                    itemCount = food.quantity,
+                                    totalPrice = food.price
+                                )
+                            }
+
+                            cartScreenViewModel.addFoodHistory(historyList)
+                            onConfirmClick()
+
+                                   },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

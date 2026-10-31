@@ -4,15 +4,18 @@ import androidx.room.Room
 import com.example.fooddeliveryapp.data.local.database.CardDataDatabase
 import com.example.fooddeliveryapp.data.local.database.CartFoodDataBase
 import com.example.fooddeliveryapp.data.local.database.FavoriteFoodDataBase
+import com.example.fooddeliveryapp.data.local.database.OrderHistoryDatabase
 import com.example.fooddeliveryapp.data.local.database.UserAddressesDatabase
 import com.example.fooddeliveryapp.data.local.database.UserDatabase
 import com.example.fooddeliveryapp.data.repository.AuthRepositoryImpl
 import com.example.fooddeliveryapp.data.repository.FoodCartRepositoryImpl
 import com.example.fooddeliveryapp.data.repository.GetFoodDataRepositoryImpl
+import com.example.fooddeliveryapp.data.repository.OrderFoodHistoryImpl
 import com.example.fooddeliveryapp.data.repository.UserAddressesRepositoryImpl
 import com.example.fooddeliveryapp.domain.repository.AuthRepository
 import com.example.fooddeliveryapp.domain.repository.CartFoodRepository
 import com.example.fooddeliveryapp.domain.repository.GetFoodDataRepository
+import com.example.fooddeliveryapp.domain.repository.OrderHistoryRepository
 import com.example.fooddeliveryapp.domain.repository.UserAddressRepository
 import com.example.fooddeliveryapp.domain.usecase.FilterFoodByCategory
 import com.example.fooddeliveryapp.domain.usecase.GetFavoriteFoodUseCase
@@ -33,15 +36,16 @@ val appModule = module {
     single<CartFoodRepository> { FoodCartRepositoryImpl(get(), get()) }
     single<AuthRepository>{ AuthRepositoryImpl(get(), get()) }
     single<UserAddressRepository>{ UserAddressesRepositoryImpl(get()) }
-
+    single<OrderHistoryRepository> { OrderFoodHistoryImpl(get()) }
     // ViewModels
     viewModel { HomeViewModel(get(), FilterFoodByCategory()) }
     viewModel { SavedFoodViewModel(get(), GetFavoriteFoodUseCase()) }
     viewModel { DetailScreenViewModel(get()) }
-    viewModel { CartScreenViewModel(get()) }
+    viewModel { CartScreenViewModel(get(), get()) }
     viewModel { LogInViewModel(get()) }
     viewModel { SignUpViewModel(get()) }
     viewModel { ProfileViewModel(get(), get()) }
+    viewModel { com.example.fooddeliveryapp.presentation.profileScreen.viewmodel.OrderHistoryViewModel(get()) }
 
     single {
         Room.databaseBuilder(
@@ -87,4 +91,13 @@ val appModule = module {
         ).fallbackToDestructiveMigration().build()
     }
     single { get<UserAddressesDatabase>().dao() }
+
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            OrderHistoryDatabase::class.java,
+            "order_history_db"
+        ).build()
+    }
+    single { get<OrderHistoryDatabase>().dao() }
 }

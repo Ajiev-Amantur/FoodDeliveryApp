@@ -39,7 +39,9 @@ import com.example.fooddeliveryapp.domain.model.AddressModel
 import com.example.fooddeliveryapp.presentation.profileScreen.MyAddressScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.AddAddressScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.EditProfileScreen
+import com.example.fooddeliveryapp.presentation.profileScreen.OrderHistoryScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.PaymentMethodsScreen
+import com.example.fooddeliveryapp.presentation.profileScreen.viewmodel.OrderHistoryViewModel
 import com.example.fooddeliveryapp.presentation.profileScreen.PersonalInfoScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.ProfileScreen
 import com.example.fooddeliveryapp.presentation.profileScreen.viewmodel.ProfileViewModel
@@ -158,8 +160,18 @@ class MainActivity : ComponentActivity() {
                             userEmail = route.email,
                             onBackClick = { navController.popBackStack() },
                             onVerifyClick = {
-                                navController.navigate(OnboardingRoute) {
-                                    popUpTo(LoginRoute) { inclusive = true }
+                                val profileRoute = try {
+                                    navController.getBackStackEntry<ProfileRoute>()
+                                    true
+                                }catch (e: Exception){
+                                    false
+                                }
+                                if (profileRoute){
+                                    navController.popBackStack<ProfileRoute>(inclusive = false)
+                                }else {
+                                    navController.navigate(OnboardingRoute) {
+                                        popUpTo(LoginRoute) { inclusive = true }
+                                    }
                                 }
                             }
                         )
@@ -280,12 +292,24 @@ class MainActivity : ComponentActivity() {
                             onPaymentMethodsClick = { navController.navigate(PaymentMethodsRoute) },
                             onPersonalInfoClick = { navController.navigate(PersonalInfoRote) },
                             onAddressesClick = { navController.navigate(AddressListRoute) },
+                            onOrderHistoryClick = { navController.navigate(OrderHistoryRoute) },
                             onChangePasswordClick = { navController.navigate(ForgotPasswordRoute) },
                             onLogOutClick = {
                                 auth.signOut()
                                 navController.navigate(OnboardingRoute) {
                                     popUpTo(HomeRoute) { inclusive = true }
                                 }
+                            }
+                        )
+                    }
+                    composable<OrderHistoryRoute> {
+                        val orderHistoryViewModel: OrderHistoryViewModel = koinViewModel()
+
+                        OrderHistoryScreen(
+                            orderHistoryViewModel = orderHistoryViewModel,
+                            onBackClick = { navController.popBackStack() },
+                            onReorderClick = {
+                                navController.navigate(CartRoute)
                             }
                         )
                     }

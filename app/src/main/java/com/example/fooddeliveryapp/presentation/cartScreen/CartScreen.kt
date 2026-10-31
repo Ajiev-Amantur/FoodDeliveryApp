@@ -113,7 +113,9 @@ fun CartScreen(
                             .height(60.dp)
                             .background(gradient, RoundedCornerShape(20.dp))
                             .clip(RoundedCornerShape(20.dp))
-                            .clickable { isSelected = true },
+                            .clickable {
+
+                                isSelected = true },
                         contentAlignment = Alignment.Center
                     ) {
                         Text(

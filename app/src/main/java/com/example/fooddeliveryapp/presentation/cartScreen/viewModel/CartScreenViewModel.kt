@@ -7,13 +7,17 @@ import com.example.fooddeliveryapp.data.local.entity.CartFoodEntity
 import com.example.fooddeliveryapp.domain.model.CardDataModel
 import com.example.fooddeliveryapp.domain.model.CartFoodModel
 import com.example.fooddeliveryapp.domain.model.FoodDataModel
+import com.example.fooddeliveryapp.domain.model.OrderHistoryModel
 import com.example.fooddeliveryapp.domain.repository.CartFoodRepository
+import com.example.fooddeliveryapp.domain.repository.OrderHistoryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class CartScreenViewModel(
-    private val cartFoodRepository: CartFoodRepository): ViewModel() {
+    private val cartFoodRepository: CartFoodRepository,
+    private val oderFoodRepository: OrderHistoryRepository
+): ViewModel() {
 
     private var _cartFood = MutableStateFlow<List<CartFoodModel>>(emptyList())
     val cartFood: StateFlow<List<CartFoodModel>> = _cartFood
@@ -29,6 +33,14 @@ class CartScreenViewModel(
     fun addFoodCart(foodItem: FoodDataModel) {
         viewModelScope.launch {
             cartFoodRepository.addFoodCart(foodItem)
+        }
+    }
+
+    fun addFoodHistory(model: List<OrderHistoryModel>){
+        viewModelScope.launch {
+            model.map { foodsLists ->
+                oderFoodRepository.addFoodHistory(foodsLists)
+            }
         }
     }
 

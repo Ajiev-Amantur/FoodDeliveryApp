@@ -73,6 +73,7 @@ fun ProfileScreen(
     onPaymentMethodsClick: () -> Unit = {},
     onPersonalInfoClick: () -> Unit = {},
     onAddressesClick: () -> Unit = {},
+    onOrderHistoryClick: () -> Unit = {},
     onChangePasswordClick: () -> Unit = {},
     onLogOutClick: () -> Unit = {}
 ) {
@@ -214,7 +215,7 @@ fun ProfileScreen(
                         ProfileMenuItem(
                             icon = Icons.Default.Home,
                             title = "Order History",
-                            onClick = {}
+                            onClick = onOrderHistoryClick
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))

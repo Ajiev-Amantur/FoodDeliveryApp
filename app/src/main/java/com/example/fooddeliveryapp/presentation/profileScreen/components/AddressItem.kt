@@ -1,4 +1,4 @@
-package com.example.fooddeliveryapp.presentation.profileScreen
+package com.example.fooddeliveryapp.presentation.profileScreen.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.sp
 import com.example.fooddeliveryapp.domain.model.AddressModel
 
 @Composable
-fun AdressItem(
+fun AddressItem(
     addressModel: AddressModel,
     onEditClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {}
@@ -132,9 +132,9 @@ fun AdressItem(
 
 @Preview(showBackground = true)
 @Composable
-fun AdressItemPreview() {
+fun AddressItemPreview() {
     Column(modifier = Modifier.padding(16.dp)) {
-        AdressItem(
+        AddressItem(
             addressModel = AddressModel(
                 address = "2464 Royal Ln. Mesa, New Jersey 45463",
                 street = "Royal Ln",
@@ -144,7 +144,7 @@ fun AdressItemPreview() {
             )
         )
         Spacer(modifier = Modifier.height(12.dp))
-        AdressItem(
+        AddressItem(
             addressModel = AddressModel(
                 address = "3891 Ranchview Dr. Richardson, California 62639",
                 street = "Ranchview Dr",
